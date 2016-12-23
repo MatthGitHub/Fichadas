@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="KronosIIIPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>kronosiii.negocio.entidades.Tipolicencia</class>
+    <class>kronosiii.negocio.entidades.Ubicacionreloj</class>
+    <class>kronosiii.negocio.entidades.Dtproperties</class>
+    <class>kronosiii.negocio.entidades.Modalidadhoraria</class>
+    <class>kronosiii.negocio.entidades.Tipoempleado</class>
+    <class>kronosiii.negocio.entidades.Tipoausencias</class>
+    <class>kronosiii.negocio.entidades.Tipodocumento</class>
+    <class>kronosiii.negocio.entidades.Usuarios</class>
+    <class>kronosiii.negocio.entidades.Test</class>
+    <class>kronosiii.negocio.entidades.Lugardetrabajo</class>
+    <class>kronosiii.negocio.entidades.Sysconstraints</class>
+    <class>kronosiii.negocio.entidades.Tipodefranco</class>
+    <class>kronosiii.negocio.entidades.Motivos</class>
+    <class>kronosiii.negocio.entidades.Edificio</class>
+    <class>kronosiii.negocio.entidades.Syssegments</class>
+    <class>kronosiii.negocio.entidades.Tipousuario</class>
+    <class>kronosiii.negocio.entidades.Nacionalidad</class>
+    <class>kronosiii.negocio.entidades.Funcion</class>
+    <class>kronosiii.negocio.entidades.Empleados</class>
+    <class>kronosiii.negocio.entidades.UsuariosWeb</class>
+    <class>kronosiii.Syssegments</class>
+    <class>kronosiii.Sysconstraints</class>
+    <class>kronosiii.Modalidadhoraria</class>
+    <class>kronosiii.Test</class>
+    <class>kronosiii.Motivos</class>
+    <class>kronosiii.Edificio</class>
+    <class>kronosiii.Lugardetrabajo</class>
+    <class>kronosiii.Nacionalidad</class>
+    <class>kronosiii.Funcion</class>
+    <class>kronosiii.Tipodocumento</class>
+    <class>kronosiii.UsuariosWeb</class>
+    <class>kronosiii.Empleados</class>
+    <class>kronosiii.Dtproperties</class>
+    <class>kronosiii.Usuarios</class>
+    <class>kronosiii.Tipousuario</class>
+    <class>kronosiii.Tipoempleado</class>
+    <class>kronosiii.Tipolicencia</class>
+    <class>kronosiii.Tipodefranco</class>
+    <class>kronosiii.Ubicacionreloj</class>
+    <class>kronosiii.Tipoausencias</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:jtds:sqlserver://10.20.130.17:1433/kronospersonal"/>
+      <property name="javax.persistence.jdbc.user" value="sa"/>
+      <property name="javax.persistence.jdbc.driver" value="net.sourceforge.jtds.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+    </properties>
+  </persistence-unit>
+</persistence>
