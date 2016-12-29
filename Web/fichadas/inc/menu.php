@@ -14,7 +14,7 @@
   <div class="navbar-collapse collapse">
   <ul class="nav navbar-nav">
     <li class="active"><a href="inicio.php">Inicio</a></li>
-    <li><a href="mis_fichadas.php">Mis fichadas</a></li>
+    <li><a href="form_mis_fichadas.php">Mis fichadas</a></li>
     <?php if($_SESSION['permiso'] == 0){ ?>
     <li><a href="usuarios.php">Usuarios</a></li>
     <?php } ?>

@@ -35,21 +35,41 @@ include('inc/validar.php');
 		<!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1> Consulta de fichadas </h1>
+        <div class="row">
+          <div class="col-lg-5">
+            <p>
+  			       <a class="btn btn-lg btn-primary" href="form_mis_fichadas.php" role="button">Mis fichadas &raquo;</a>
+          </p>
+        </div>
+            <div class="col-lg-5"><?php if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)){ ?>
+      				<p>
+      					<a class="btn btn-lg btn-primary" href="form_consulta_general.php" role="button"> Consulta general de fichadas &raquo;</a>
+      				</p>
+    				<?php } ?>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5"><?php
+             if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)){ ?>
+              <p>
+                <a class="btn btn-lg btn-primary" href="form_consulta_diaria.php" role="button"> Parte diario &raquo;</a>
+              </p>
+            <?php } ?>
+        </div>
+          <div class="col-md-5"><?php
+  				    if($_SESSION['permiso'] == 0){  ?>
+      			<p>
+      				<a class="btn btn-lg btn-primary" href="form_seleccionar_legajo.php" role="button">Control acceso a fichadas &raquo;</a>
+      			</p>
+  			       <?php } ?>
+        </div>
+        </div>
 
-        <p>
-			<a class="btn btn-lg btn-primary" href="mis_fichadas.php" role="button">Mis fichadas &raquo;</a>
-        </p>
 
-				<?php if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)){ ?>
-				<p>
-					<a class="btn btn-lg btn-primary" href="form_consulta_general.php" role="button">Consulta general de fichadas &raquo;</a>
-				</p>
-				<?php }
-				if($_SESSION['permiso'] == 0){  ?>
-			<p>
-				<a class="btn btn-lg btn-primary" href="form_seleccionar_legajo.php" role="button">Control acceso a fichadas &raquo;</a>
-			</p>
-			<?php } ?>
+
+
+
+
       </div>
 
     </div> <!-- /container -->

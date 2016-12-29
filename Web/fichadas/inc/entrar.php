@@ -3,13 +3,15 @@ session_start();
 // Configura los datos de tu cuenta
 include('config.php');
 
-
 if(isset($_POST['nombre_usuario']) && isset($_POST['contrasenia'])){
 	if ($_POST['nombre_usuario']) {
 		//Comprobacion del envio del nombre de usuario y contrasenia
 		$nombre_usuario=htmlentities($_POST['nombre_usuario']);
 		//$contrasenia=md5($_POST['contrasenia']);
 		$contrasenia=md5($_POST['contrasenia']);
+
+
+
 		if ($contrasenia==NULL) {
 			header ("Location: ../index.php?nopass");
 			exit();

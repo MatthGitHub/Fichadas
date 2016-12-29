@@ -3,17 +3,45 @@ include('inc/config.php');
 include('inc/validar.php');
 
 
+if($_POST['txtFecha']){
+
+$desde = $_POST['txtFecha'];
+$area = $_POST['area'];
 $legajo = $_SESSION['legajo'];
-//echo "Desde: ".$_POST['txtFechaDesde']." Hasta: ".$_POST['txtFechaHasta'];
-//exit();
 
-if(($_POST['txtFechaDesde'])&&($_POST['txtFechaHasta'])){
 
-$desde = $_POST['txtFechaDesde'];
-$hasta = $_POST['txtFechaHasta'];
-
-$sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,SUBSTRING(CAST(hora AS varchar(24)),12,24) as hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
-
+if($area == 3){
+  $sql = "SELECT legajo,nombre, apellido, CONVERT(VARCHAR(12),fecha,3) as fechaN,SUBSTRING(CAST(hora AS varchar(24)),12,24) as hora,
+          entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj
+          FROM fichada f
+          JOIN empleados e
+          ON e.idempleado = f.idempleado
+          JOIN ubicacionreloj u
+          ON u.idReloj = f.idreloj
+          WHERE legajo IN (
+              SELECT legajo
+              FROM Personal_fichadas_permisos
+              WHERE usuario = $legajo
+              )
+          AND fecha = '$desde'
+          ORDER BY legajo,fecha,hora,entradasalida DESC";
+}else{
+  $sql = "SELECT legajo,nombre, apellido, CONVERT(VARCHAR(12),fecha,3) as fechaN,SUBSTRING(CAST(hora AS varchar(24)),12,24) as hora,
+          entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj
+          FROM fichada f
+          JOIN empleados e
+          ON e.idempleado = f.idempleado
+          JOIN ubicacionreloj u
+          ON u.idReloj = f.idreloj
+          WHERE legajo IN (
+              SELECT legajo
+              FROM Personal_fichadas_permisos
+              WHERE usuario = $legajo
+              )
+          AND fecha = '$desde'
+          AND entradasalida = '$area'
+          ORDER BY legajo,fecha,hora,entradasalida DESC";
+}
 
 $stmt = mssql_query( $sql,$conn);
 if( $stmt === false ) {
@@ -114,6 +142,9 @@ if( $stmt === false ) {
         <div class="row">
               <table id="example" class="display" cellspacing="0" width="100%">
                 	<thead>
+                      <th> Legajo </th>
+                      <th> Nombre </th>
+                      <th> Apellido </th>
                       <th> Fecha </th>
             					<th> Hora </th>
             					<th> E/S </th>
@@ -123,6 +154,9 @@ if( $stmt === false ) {
                     <tbody>
                     	<?php while($fichadas = mssql_fetch_array( $stmt)){ ?>
                         <tr class="success">
+                            <td> <?php echo $fichadas['legajo']; ?> </td>
+                            <td> <?php echo $fichadas['nombre']; ?> </td>
+                            <td> <?php echo $fichadas['apellido']; ?> </td>
                             <td> <?php echo $fichadas['fechaN']; ?> </td>
                             <td> <?php echo $fichadas['hora']; ?> </td>
                             <td> <?php echo $fichadas['entradasalida']; ?> </td>

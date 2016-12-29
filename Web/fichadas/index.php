@@ -78,6 +78,7 @@ body
                     </div>
                 </div>
                 <input type="submit" name="Submit" value="Iniciar Sesion"  class="btn btn-sm btn-primary btn-block">
+
                <br>
                </form>
               </div>
@@ -87,7 +88,7 @@ echo "
 <div class='alert alert-danger-alt alert-dismissable'>
                 <span class='glyphicon glyphicon-certificate'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Datos Incorrectos, Vuelva a intentarlo.</div>
+                    ×</button>Datos Incorrectos, Vuelva a intentarlo. El usuario es el mismo que en el PGM. Si es su primer ingreso la clave es 123</div>
 ";
 }else{
 echo "";

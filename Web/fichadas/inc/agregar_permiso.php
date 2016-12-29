@@ -4,7 +4,7 @@ include('inc/validar.php');
 
 if(isset($_POST['legajo'])){
     $legajo = $_POST['legajo'];
-    $aLegajo = $_GET['agente'];
+    $aLegajo = $_SESSION['legajo'];
 
     // Valido si existe el legajo introducido
     $sql = "SELECT * FROM Empleados WHERE legajo = $legajo";

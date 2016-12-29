@@ -18,14 +18,9 @@ $stmt = mssql_query($sql,$conn);
     <title>Usuarios</title>
 
     <!-- Bootstrap -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/jquery.dataTables.min.css" rel="stylesheet">
+		<link href="css/jquery.dataTables.min.css" rel="stylesheet">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script language='javascript' src="js/jquery-1.12.3.js"></script>
@@ -45,7 +40,40 @@ $stmt = mssql_query($sql,$conn);
         "scrollCollapse": true,
         "order":[[0,"desc"]]
           } );
-      } );
+
+          $('#example tbody').on( 'click', 'tr', function () {
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                      $('#example').DataTable.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            } );
+
+
+
+          $('.btn').click(function(){
+               //Recogemos la id del contenedor padre
+               var usuario = $(this).attr('usuario');
+               //Recogemos el valor del servicio
+              var dataString = 'usuario='+usuario;
+              console.log(dataString);
+
+
+               $.ajax({
+                   type: "POST",
+                   url: "inc/eliminar.php",
+                   data: dataString,
+                   success: function() {
+                      var row = $(this).closest('tr').attr('id');
+                      //var nRow = row[0];
+                      $('#example').DataTable().row('.selected').remove().draw( false );
+                   }
+               });
+           });
+
+      });
     </script>
 
 
@@ -99,7 +127,7 @@ $stmt = mssql_query($sql,$conn);
                             <td> <?php echo $usuarios['legajo']; ?> </td>
                             <td> <?php echo $usuarios['activo']; ?> </td>
                             <td> <?php if($usuarios['fk_rol'] == 0){ echo "Administrador"; }else{ echo "Normal"; } ?> </td>
-                            <td>  <a href="inc/eliminar.php?usuario=<?php echo $usuarios['nombre_usuario'];?>" role="button"  class="btn btn-danger btn-primary btn-block"> Eliminar </a> </td>
+                            <td>  <a class="btn btn-primary btn-danger" role="button" usuario="<?php echo $usuarios['nombre_usuario']; ?>"> Eliminar </a> </td>
                         </tr>
                         <?php } ?>
                     </tbody>

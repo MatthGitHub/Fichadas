@@ -148,7 +148,7 @@ body
 
 
 <div class="container">
-	<form name="form1" method="post" action="agregar_permiso.php">
+	<form name="form1" method="post" action="agregar_permiso.php?agente=<?php echo $legajo;?>">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
@@ -204,27 +204,6 @@ echo "";
 </div>
 </form>
 </div>
-
-<form name="form1" method="post" action="agregar_permiso.php">
-  <div class="row">
-      <div class="col-md-4 col-md-offset-4">
-          <div class="panel panel-default">
-              <div class="panel-body"
-              <form class="form form-signup" role="form">
-                <div class="form-group">
-                  <div class="input-group">
-                    <span class="input-group-addon"><h5 class="text-center"> Usuario:</h5><span class="glyphicon glyphicon-user"><?php echo $usuario; ?></span> </span>
-                  </div>
-                    <input name="legajo" type="text" id="legajo" class="form-control" placeholder="Legajo a agregar" />
-                </div>
-                <input type="submit" name="Submit" value="Agregar"  class="btn btn-sm btn-primary btn-block">
-            </form>
-          </div>
-      </div>
-  </div>
-</div>
-</form>
-
       </div>
       <div class="jumbotron">
         <div class="row">
