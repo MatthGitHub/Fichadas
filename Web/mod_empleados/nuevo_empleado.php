@@ -183,11 +183,7 @@ body
                                     <div class="form-group">
                                        <div class="input-group">
                                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Legajo </span></span>
-                                            <? if($existe == 1){ ?>
-                                              <input name="legajo" type="text" class="form-control"  id="legajo" value="<?php echo $legajo; ?>" />
-                                           <? }else{ ?>
-                                              <input name="legajo" type="text" class="form-control"  id="legajo" placeholder="Legajo" />
-                                           <? } ?>
+                                              <input name="legajo" type="text" class="form-control"  id="legajo" value="<?php echo $legajo; ?>" readonly />
                                        </div>
                                     </div>
 
