@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 
 $sql = "SELECT nombre_usuario,e.legajo,u.activo,fk_rol,  (nombre +' '+ apellido ) AS empleado FROM usuarios_web u JOIN empleados e ON u.idempleado = e.idempleado";
 $stmt = mssql_query($sql,$conn);
@@ -18,13 +18,13 @@ $stmt = mssql_query($sql,$conn);
     <title>Usuarios</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="../css/jquery.dataTables.min.css" rel="stylesheet">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script language='javascript' src="js/jquery-1.12.3.js"></script>
-    <script language='javascript' src="js/jquery.dataTables.min.js"></script>
+    <script language='javascript' src="../js/jquery-1.12.3.js"></script>
+    <script language='javascript' src="../js/jquery.dataTables.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -106,7 +106,8 @@ $stmt = mssql_query($sql,$conn);
 
       <!-- Static navbar -->
      <!-- Static navbar -->
-      <?php include('inc/menu.php'); ?>
+     <br>
+      <?php include('../inc/menu.php'); ?>
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="row">
@@ -126,7 +127,9 @@ $stmt = mssql_query($sql,$conn);
                             <td> <?php echo $usuarios['empleado']; ?> </td>
                             <td> <?php echo $usuarios['legajo']; ?> </td>
                             <td> <?php echo $usuarios['activo']; ?> </td>
-                            <td> <?php if($usuarios['fk_rol'] == 0){ echo "Administrador"; }else{ echo "Normal"; } ?> </td>
+                            <td> <?php if($usuarios['fk_rol'] == 0){ echo "Administrador"; };
+                                       if($usuarios['fk_rol'] == 1){ echo "Jefe"; };
+                                       if($usuarios['fk_rol'] == 2){ echo "Normal"; }; ?> </td>
                             <td>  <a class="btn btn-primary btn-danger" role="button" usuario="<?php echo $usuarios['nombre_usuario']; ?>"> Eliminar </a> </td>
                         </tr>
                         <?php } ?>

@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 ?>
 
 <!DOCTYPE html>
@@ -9,25 +9,11 @@ include('inc/validar.php');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Mis Fichadas </title>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script language='javascript' src="js/jquery-1.12.3.js"></script>
-      <script src="js/bootstrap.js"></script>
-    <script src="js/moment.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.es.js"></script>
+    <title> Cambiar clave</title>
 
     <!-- Bootstrap -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-
-
-
-
-
+    <script language='javascript' src="../js/jquery-1.12.3.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -83,46 +69,49 @@ body
     border-color: rgb(40, 94, 142);
     color: rgb(255, 255, 255);
 }
-
+.form-signup input[type="text"],.form-signup input[type="password"] { border: 1px solid rgb(50, 118, 177); }
   </style>
   <body>
-    <?php include('inc/menu.php'); ?>
-    <br>
-        <div class="container">
 
+
+        <div class="container">
+          <br>
+          <?php include('../inc/menu.php'); ?>
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 
 
 <div class="container">
-	<form name="form1" method="post" action="mis_fichadas.php">
+	<form name="form1" method="post" action="cambiar_clave.php">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
-                <div class="panel-body"
+                <div class="panel-body">
+                    <h5 class="text-center"> Cambio de clave:  <?php echo $_SESSION["s_nombre_usuario"]; ?></h5>
                     <form class="form form-signup" role="form">
 						<div class="form-group">
-              <div class='input-group date' id='divMiCalendario'> Desde
-                <input name="txtFechaDesde" type='text' id="txtFechaDesde" class="form-control"  readonly/>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
-              <div class='input-group date' id='divMiCalendario2'> Hasta
-                <input name="txtFechaHasta" type='text' id="txtFechaHasta" class="form-control"  readonly/>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
+							<div class="input-group">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+								<input name="claveA" type="password" id="claveA" class="form-control" placeholder="Clave nueva" />
+							</div>
 						</div>
-						<input type="submit" name="Submit" value="Buscar"  class="btn btn-sm btn-primary btn-block">
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span>
+								</span>
+								<input name="claveN" type="password" id="claveN" class="form-control" placeholder="Repetir clave nueva" />
+							</div>
+						</div>
+						<input type="submit" name="Submit" value="Cambiar"  class="btn btn-sm btn-primary btn-block">
 					</form>
             </div>
                      <?php
-if(isset($_GET['sucess'])){
+if(isset($_GET['success'])){
 echo "
 <div class='alert alert-success-alt alert-dismissable'>
                 <span class='glyphicon glyphicon-certificate'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Listo! Tu registro fue hecho satisfactoriamente.</div>
+                    ×</button>Listo! Cambio de clave realizado satisfactoriamente.</div>
 ";
 }else{
 echo "";
@@ -134,7 +123,7 @@ echo "
 <div class='alert alert-warning-alt alert-dismissable'>
                 <span class='glyphicon glyphicon-certificate'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Ha habido un error al insertar los valores.</div>
+                    ×</button>No ha ingresado todos los datos o los datos no son validos</div>
 ";
 }else{
 echo "";
@@ -163,17 +152,6 @@ echo "";
       </div>
 
     </div> <!-- /container -->
-    <script type="text/javascript">
-    $('#divMiCalendario').datetimepicker({
-      format: 'YYYY-MM-DD'
-    });
-    //$('#divMiCalendario').data("DateTimePicker").show();
-    </script>
-    <script type="text/javascript">
-    $('#divMiCalendario2').datetimepicker({
-      format: 'YYYY-MM-DD'
-    });
-    //$('#divMiCalendario2').data("DateTimePicker").show();
-    </script>
+
   </body>
 </html>

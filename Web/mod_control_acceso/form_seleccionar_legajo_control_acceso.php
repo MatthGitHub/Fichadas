@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 ?>
 
 <!DOCTYPE html>
@@ -9,10 +9,10 @@ include('inc/validar.php');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Cambiar clave</title>
+    <title> Control acceso a fichadas </title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -68,39 +68,32 @@ body
     border-color: rgb(40, 94, 142);
     color: rgb(255, 255, 255);
 }
-.form-signup input[type="text"],.form-signup input[type="password"] { border: 1px solid rgb(50, 118, 177); }
+
   </style>
   <body>
-    <?php include('inc/menu.php'); ?>
-    <br>
+
         <div class="container">
+          <br>
+          <?php include('../inc/menu.php'); ?>
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 
 
 <div class="container">
-	<form name="form1" method="post" action="inc/cambiar_clave.php">
+	<form name="form1" method="post" action="form_control_acceso.php">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <h5 class="text-center"> Cambio de clave:  <?php echo $_SESSION["s_nombre_usuario"]; ?></h5>
+                <div class="panel-body"
                     <form class="form form-signup" role="form">
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-								<input name="claveA" type="password" id="claveA" class="form-control" placeholder="Clave nueva" />
+								<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+								<input name="legajo" type="text" id="legajo" class="form-control" placeholder="Legajo" />
 							</div>
 						</div>
-						<div class="form-group">
-							<div class="input-group">
-								<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span>
-								</span>
-								<input name="claveN" type="password" id="claveN" class="form-control" placeholder="Repetir clave nueva" />
-							</div>
-						</div>
-						<input type="submit" name="Submit" value="Cambiar"  class="btn btn-sm btn-primary btn-block">
+						<input type="submit" name="Submit" value="Seleccionar"  class="btn btn-sm btn-primary btn-block">
 					</form>
             </div>
                      <?php

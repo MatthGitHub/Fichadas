@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 ?>
 
 <!DOCTYPE html>
@@ -9,25 +9,11 @@ include('inc/validar.php');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Mis Fichadas </title>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script language='javascript' src="js/jquery-1.12.3.js"></script>
-      <script src="js/bootstrap.js"></script>
-    <script src="js/moment.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.es.js"></script>
+    <title> Control acceso a fichadas </title>
 
     <!-- Bootstrap -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-
-
-
-
-
+    <script language='javascript' src="../js/jquery-1.12.3.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -86,37 +72,29 @@ body
 
   </style>
   <body>
-    <?php include('inc/menu.php'); ?>
-    <br>
+
         <div class="container">
+          <br>
+          <?php include('../inc/menu.php'); ?>
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 
 
 <div class="container">
-	<form name="form1" method="post" action="consulta_diaria.php">
+	<form name="form1" method="post" action="tarjetas.php">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
                 <div class="panel-body"
                     <form class="form form-signup" role="form">
 						<div class="form-group">
-              <div class='input-group date' id='divMiCalendario'>
-                <input name="txtFecha" type='text' id="txtFecha" class="form-control"  readonly/>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-              </div>
+							<div class="input-group">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+								<input name="legajo" type="text" id="legajo" class="form-control" placeholder="Legajo" />
+							</div>
 						</div>
-            <span class="input-group-addon"><span class="glyphicon glyphicon-chevron-down"> Entrada o Salida </span></span>
-            <div class="col-xs-15 selectContainer">
-                <select class="form-control" name="area" id="area">
-                    <option> Eliga uno </option>
-                      <option value = E> Entradas </option>
-                      <option value = S> Salidas </option>
-                      <option value = 3> Entradas y Salidas </option>
-                </select>
-            </div>
-						<input type="submit" name="Submit" value="Buscar"  class="btn btn-sm btn-primary btn-block">
+						<input type="submit" name="Submit" value="Seleccionar"  class="btn btn-sm btn-primary btn-block">
 					</form>
             </div>
                      <?php
@@ -166,11 +144,5 @@ echo "";
       </div>
 
     </div> <!-- /container -->
-    <script type="text/javascript">
-    $('#divMiCalendario').datetimepicker({
-      format: 'YYYY-MM-DD'
-    });
-    $('#divMiCalendario').data("DateTimePicker").show();
-    </script>
   </body>
 </html>

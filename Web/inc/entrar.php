@@ -26,7 +26,7 @@ if(isset($_POST['nombre_usuario']) && isset($_POST['contrasenia'])){
 			header ("Location: ../index.php?errorpass");
 			exit();
 		}else{
-			$sql = "SELECT legajo,idempleado,nombre_usuario,clave,fk_rol FROM USUARIOS_WEB WHERE nombre_usuario = '$nombre_usuario'";
+			$sql = "SELECT legajo,e.idempleado,nombre_usuario,clave,fk_rol FROM USUARIOS_WEB uw JOIN empleados e ON uw.idEmpleado = e.idEmpleado WHERE nombre_usuario = '$nombre_usuario'";
 			$stmt =mssql_query($sql,$conn);
 			$row = mssql_fetch_array($stmt);
 			$nombre_usuario2 = $row['nombre_usuario'];
@@ -41,7 +41,7 @@ if(isset($_POST['nombre_usuario']) && isset($_POST['contrasenia'])){
 				header("Location: ../index.php?erroractiv");
 				exit();
 			}
-			header ("Location: ../inicio.php");
+			header ("Location: inicio.php");
 			exit();
 			}
 		}

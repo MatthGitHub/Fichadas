@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 
 if(isset($_POST['legajo'])){
     $legajo = $_POST['legajo'];
@@ -19,7 +19,7 @@ if(isset($_POST['legajo'])){
       }else{
         $sql = "INSERT INTO Personal_fichadas_permisos VALUES ( $aLegajo,$legajo)";
         mssql_query($sql,$conn);
-        header("Location: form_control_acceso.php?succes&legajo={$aLegajo}");
+        header("Location: form_control_acceso.php?success&legajo={$aLegajo}");
         exit();
       }
     }else{

@@ -1,43 +1,14 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 
-if(isset($_GET['legajo'])){
-  $legajo = $_GET['legajo'];
-  //echo "Entro por GET: ".$legajo;
-}else{
-  $legajo = $_POST['legajo'];
-  //echo "Entro por POST: ".$legajo;
-}
-
-
-  $sql = "SELECT legajo,nombre_usuario FROM USUARIOS_WEB WHERE legajo = $legajo";
+  //Busco las nacionalidades
+  $sql = "SELECT idNacionalidad, Descripcion FROM nacionalidad";
   $stmt = mssql_query($sql,$conn);
-  $usuario = mssql_fetch_array($stmt);
-  $legajo = $usuario['legajo'];
-  $usuario = $usuario['nombre_usuario'];
 
-  //Busco los legajos que tiene asignado el legajo seleccionado
-  $sql = "SELECT e.legajo, apellido, nombre FROM Personal_fichadas_permisos pfp JOIN empleados e ON e.legajo = pfp.legajo WHERE usuario = $legajo";
-  $stmt = mssql_query($sql,$conn);
+
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Control acceso a fichadas </title>
-
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/jquery.dataTables.min.css" rel="stylesheet">
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script language='javascript' src="js/jquery-1.12.3.js"></script>
-    <script language='javascript' src="js/jquery.dataTables.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -47,17 +18,17 @@ if(isset($_GET['legajo'])){
     <![endif]-->
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#example').DataTable( {
+  $('#nacionalidad').DataTable( {
       "scrollY": "500px",
       "scrollCollapse": true
   } );
 
-  $('#example tbody').on( 'click', 'tr', function () {
+  $('#nacionalidad tbody').on( 'click', 'tr', function () {
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
         }
         else {
-              $('#example').DataTable.$('tr.selected').removeClass('selected');
+              $('#nacionalidad').DataTable.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
         }
     } );
@@ -68,19 +39,19 @@ $(document).ready(function() {
        //Recogemos la id del contenedor padre
        var legajo = $(this).attr('legajo');
        //Recogemos el valor del servicio
-       var usuario = "<?php echo $_SESSION['legajo']; ?>";
+       var usuario = "<?php echo $legajo; ?>";
 
        var dataString = 'legajo='+legajo+"&usuario="+usuario;
-
+       console.log(dataString);
 
        $.ajax({
            type: "POST",
-           url: "inc/quitar.php",
+           url: "quitar.php",
            data: dataString,
            success: function() {
               var row = $(this).closest('tr').attr('id');
               //var nRow = row[0];
-              $('#example').DataTable().row('.selected').remove().draw( false );
+              $('#nacionalidad').DataTable().row('.selected').remove().draw( false );
            }
        });
    });
@@ -88,15 +59,14 @@ $(document).ready(function() {
 });
 
 </script>
-  </head>
+
   <style type="text/css">
-  body{background: #000;}
 
      .media
     {
         /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
+        margin: 10px 0;
+        padding:15px;
     }
     .dp
     {
@@ -111,10 +81,7 @@ $(document).ready(function() {
         -webkit-transform:rotate(360deg);
         /*-webkit-font-smoothing:antialiased;*/
     }
-body
-{
-    background-color: #1b1b1b;
-}
+
 
 .alert-purple { border-color: #694D9F;background: #694D9F;color: #fff; }
 .alert-info-alt { border-color: #B4E1E4;background: #81c7e1;color: #fff; }
@@ -138,38 +105,33 @@ body
 }
 
   </style>
-  <body>
-    <?php include('inc/menu.php'); ?>
-    <br>
-        <div class="container">
 
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
 
 
 <div class="container">
-	<form name="form1" method="post" action="agregar_permiso.php?agente=<?php echo $legajo;?>">
+	<form name="form1" method="post" action="agregar_nacionalidad.php">
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-md-4 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-body"
                 <form class="form form-signup" role="form">
       						<div class="form-group">
       							<div class="input-group">
-      								<span class="input-group-addon"><h5 class="text-center"> Usuario:</h5><span class="glyphicon glyphicon-user"><?php echo $usuario; ?></span> </span>
+      								<span class="input-group-addon"><h5 class="text-center"> Nacionalidad:</h5><span class="glyphicon glyphicon-user"><?php echo $usuario; ?></span> </span>
                     </div>
-                      <input name="legajo" type="text" id="legajo" class="form-control" placeholder="Legajo a agregar" />
+                      <input name="nacion" type="text" id="nacion" class="form-control" placeholder="Nacionalidad a agregar" />
       						</div>
 					        <input type="submit" name="Submit" value="Agregar"  class="btn btn-sm btn-primary btn-block">
     					</form>
             </div>
-                     <?php
-if(isset($_GET['sucess'])){
+
+ <?php
+if(isset($_GET['success'])){
 echo "
 <div class='alert alert-success-alt alert-dismissable'>
                 <span class='glyphicon glyphicon-certificate'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Listo! Tu registro fue hecho satisfactoriamente.</div>
+                    ×</button>Listo! Legajo agregado satisfactoriamente.</div>
 ";
 }else{
 echo "";
@@ -203,33 +165,26 @@ echo "";
     </div>
 </div>
 </form>
-</div>
-      </div>
+
       <div class="jumbotron">
         <div class="row">
-              <table id="example" class="display" cellspacing="0" width="100%">
+              <table id="nacionalidad" class="display" cellspacing="0" width="100%">
                   <thead>
-                      <th> Legajo </th>
-                      <th> Apellido </th>
-                      <th> Nombre </th>
+                      <th> ID </th>
+                      <th> Descripcion </th>
                       <th> Quitar </th>
                   </thead>
                     <tbody>
-                      <?php while($permisos = mssql_fetch_array( $stmt)){ ?>
+                      <?php while($nacionalidad = mssql_fetch_array( $stmt)){ ?>
                         <tr >
-                            <td> <?php echo $permisos['legajo']; ?> </td>
-                            <td> <?php echo $permisos['apellido']; ?> </td>
-                            <td> <?php echo $permisos['nombre']; ?> </td>
-                            <td> <a class="btn btn-primary btn-danger" role="button" legajo="<?php echo $permisos['legajo'];?>" > quitar </a> </td>
+                            <td> <?php echo $nacionalidad['idNacionalidad']; ?> </td>
+                            <td> <?php echo $nacionalidad['Descripcion']; ?> </td>
+                            <td> <a class="btn btn-primary btn-danger" role="button" legajo="<?php echo $nacionalidad['idNacionalidad'];?>" > quitar </a> </td>
                         </tr>
                         <?php } ?>
                     </tbody>
         </table>
-<!--href="inc/quitar.php?legajo=<?php echo $permisos['legajo'];?>&usuario=<?php echo $_SESSION['legajo'];?>"-->
         </div>
-      </div>
-    </div> <!-- /container -->
+        </div>
 
-
-  </body>
-</html>
+</div>

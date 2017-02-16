@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 
 
 $legajo = $_SESSION['legajo'];
@@ -12,7 +12,7 @@ if(($_POST['txtFechaDesde'])&&($_POST['txtFechaHasta'])){
 $desde = $_POST['txtFechaDesde'];
 $hasta = $_POST['txtFechaHasta'];
 
-$sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,SUBSTRING(CAST(hora AS varchar(24)),12,24) as hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
+$sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
 
 
 $stmt = mssql_query( $sql,$conn);
@@ -35,13 +35,13 @@ if( $stmt === false ) {
     <title>Mis Fichadas</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="../css/jquery.dataTables.min.css" rel="stylesheet">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script language='javascript' src="js/jquery-1.12.3.js"></script>
-    <script language='javascript' src="js/jquery.dataTables.min.js"></script>
+    <script language='javascript' src="../js/jquery-1.12.3.js"></script>
+    <script language='javascript' src="../js/jquery.dataTables.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -76,7 +76,7 @@ if( $stmt === false ) {
         "scrollY":        "500px",
         "scrollCollapse": true,
         "columnDefs": [{ type: 'date-uk', targets: 0 }],
-        "order":[[0,"desc"]]
+        "order":[[0,"desc"],[1,"desc"]]
           } );
       } );
     </script>
@@ -108,7 +108,9 @@ if( $stmt === false ) {
     <div class="container">
 
       <!-- Static navbar -->
-      <?php include('inc/menu.php'); ?>
+      <br>
+      <?php include('../inc/menu.php'); ?>
+
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="row">

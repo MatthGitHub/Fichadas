@@ -1,6 +1,6 @@
 <?php
-include('inc/config.php');
-include('inc/validar.php');
+include('../inc/config.php');
+include('../inc/validar.php');
 
 if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFechaHasta'])){
   $legajo = $_POST['legajo'];
@@ -21,7 +21,7 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
     $apellido = $stmt['apellido'];
 
     //Busco las fichadas del legajo seleccionado
-    $sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,SUBSTRING(CAST(hora AS varchar(24)),12,24) as hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
+    $sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
     $stmt = mssql_query( $sql,$conn);
   }else{
     header("Location: form_consulta_general.php?errordat");
@@ -44,18 +44,18 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
     <title> Consulta general de fichadas </title>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script language='javascript' src="js/jquery-1.12.3.js"></script>
-      <script src="js/bootstrap.js"></script>
-    <script src="js/moment.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.es.js"></script>
-    <script language='javascript' src="js/jquery.dataTables.min.js"></script>
+    <script language='javascript' src="../js/jquery-1.12.3.js"></script>
+      <script src="../js/bootstrap.js"></script>
+    <script src="../js/moment.min.js"></script>
+    <script src="../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../js/bootstrap-datetimepicker.es.js"></script>
+    <script language='javascript' src="../js/jquery.dataTables.min.js"></script>
 
     <!-- Bootstrap -->
-    <script src="js/bootstrap.min.js"></script>
-	   <link href="css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <script src="../js/bootstrap.min.js"></script>
+	   <link href="../css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -146,10 +146,11 @@ body
 
   </style>
   <body>
-    <?php include('inc/menu.php'); ?>
-    <br>
-        <div class="container">
 
+
+        <div class="container">
+          <br>
+          <?php include('../inc/menu.php'); ?>
       <!-- Main component for a primary marketing message or call to action -->
 
 
