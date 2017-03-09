@@ -7,6 +7,7 @@ package kronosiii.negocio.entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -50,7 +53,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Empleados.findByEsereno", query = "SELECT e FROM Empleados e WHERE e.esereno = :esereno"),
     @NamedQuery(name = "Empleados.findByToleranciaTarde", query = "SELECT e FROM Empleados e WHERE e.toleranciaTarde = :toleranciaTarde"),
     @NamedQuery(name = "Empleados.findByHorasATrabajar", query = "SELECT e FROM Empleados e WHERE e.horasATrabajar = :horasATrabajar"),
-    @NamedQuery(name = "Empleados.findByOficinaPersonal", query = "SELECT e FROM Empleados e WHERE e.oficinaPersonal = :oficinaPersonal")})
+    @NamedQuery(name = "Empleados.findByOficinaPersonal", query = "SELECT e FROM Empleados e WHERE e.oficinaPersonal = :oficinaPersonal"),
+    @NamedQuery(name = "Empleados.findByIdEmpelado", query = "SELECT e FROM Empleados e WHERE e.idEmpelado = :idEmpelado")})
 public class Empleados implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -104,6 +108,11 @@ public class Empleados implements Serializable {
     private Integer horasATrabajar;
     @Column(name = "OficinaPersonal")
     private Integer oficinaPersonal;
+    @Basic(optional = false)
+    @Column(name = "idEmpelado")
+    private int idEmpelado;
+    @OneToMany(mappedBy = "idEmpleado")
+    private List<UsuariosWeb> usuariosWebList;
     @JoinColumn(name = "IdEdificio", referencedColumnName = "IdEdificio")
     @ManyToOne
     private Edificio idEdificio;
@@ -133,9 +142,10 @@ public class Empleados implements Serializable {
         this.idEmpleado = idEmpleado;
     }
 
-    public Empleados(Integer idEmpleado, int legajo) {
+    public Empleados(Integer idEmpleado, int legajo, int idEmpelado) {
         this.idEmpleado = idEmpleado;
         this.legajo = legajo;
+        this.idEmpelado = idEmpelado;
     }
 
     public Integer getIdEmpleado() {
@@ -312,6 +322,23 @@ public class Empleados implements Serializable {
 
     public void setOficinaPersonal(Integer oficinaPersonal) {
         this.oficinaPersonal = oficinaPersonal;
+    }
+
+    public int getIdEmpelado() {
+        return idEmpelado;
+    }
+
+    public void setIdEmpelado(int idEmpelado) {
+        this.idEmpelado = idEmpelado;
+    }
+
+    @XmlTransient
+    public List<UsuariosWeb> getUsuariosWebList() {
+        return usuariosWebList;
+    }
+
+    public void setUsuariosWebList(List<UsuariosWeb> usuariosWebList) {
+        this.usuariosWebList = usuariosWebList;
     }
 
     public Edificio getIdEdificio() {

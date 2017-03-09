@@ -5,6 +5,8 @@
  */
 package kronosiii.servicios;
 
+import kronosiii.negocio.entidades.Empleados;
+import kronosiii.negocio.entidades.Roles;
 import kronosiii.negocio.entidades.UsuariosWeb;
 
 /**
@@ -15,9 +17,9 @@ public class DtoUsuariosW {
     private String nombreUsuario;
     private String clave;
     private String legajo;
-    private Integer idEmpleado;
+    private Empleados idEmpleado;
     private Boolean activo;
-    private Integer fkRol;
+    private Roles fkRol;
     private Integer idExtreme;
 
     public DtoUsuariosW(){
@@ -30,7 +32,6 @@ public class DtoUsuariosW {
         this.setFkRol(aCargar.getFkRol());
         this.setIdEmpleado(aCargar.getIdEmpleado());
         this.setNombreUsuario(aCargar.getNombreUsuario());
-        this.setLegajo(aCargar.getLegajo());
         return this;
     }
     
@@ -50,19 +51,11 @@ public class DtoUsuariosW {
         this.clave = clave;
     }
 
-    public String getLegajo() {
-        return legajo;
-    }
-
-    public void setLegajo(String legajo) {
-        this.legajo = legajo;
-    }
-
-    public Integer getIdEmpleado() {
+    public Empleados getIdEmpleado() {
         return idEmpleado;
     }
 
-    public void setIdEmpleado(Integer idEmpleado) {
+    public void setIdEmpleado(Empleados idEmpleado) {
         this.idEmpleado = idEmpleado;
     }
 
@@ -74,11 +67,11 @@ public class DtoUsuariosW {
         this.activo = activo;
     }
 
-    public Integer getFkRol() {
+    public Roles getFkRol() {
         return fkRol;
     }
 
-    public void setFkRol(Integer fkRol) {
+    public void setFkRol(Roles fkRol) {
         this.fkRol = fkRol;
     }
 

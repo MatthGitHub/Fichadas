@@ -1,25 +1,31 @@
 <?php
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include('../inc/config.php');
 include('../inc/validar.php');
 
-if(isset($_GET['legajo'])){
-  $legajo = $_GET['legajo'];
-  //echo "Entro por GET: ".$legajo;
-}else{
+
+
+if($_POST['legajo']){
   $legajo = $_POST['legajo'];
-  //echo "Entro por POST: ".$legajo;
+}else{
+  if($_GET['legajo']){
+    $legajo = $_GET['legajo'];
+  }else{
+  header("Location: form_seleccionar_legajo_control_acceso.php?errordb");
+  exit();
+  }
 }
 
-  //Busco el nombre de usuario y el legajo
-  $sql = "SELECT legajo,nombre_usuario FROM USUARIOS_WEB uw JOIN empleados e ON uw.idEmpleado = e.idEmpleado WHERE legajo = $legajo";
-  $stmt = mssql_query($sql,$conn);
-  $usuario = mssql_fetch_array($stmt);
-  $legajo = $usuario['legajo'];
-  $usuario = $usuario['nombre_usuario'];
+    //Busco el nombre de usuario y el legajo
+    $sql = "SELECT legajo,nombre_usuario FROM USUARIOS_WEB uw JOIN empleados e ON uw.idEmpleado = e.idEmpleado WHERE legajo = $legajo";
+    $stmt = sqlsrv_query($conn,$sql);
+    $usuario = sqlsrv_fetch_array($stmt);
+    $legajo = $usuario['legajo'];
+    $usuario = $usuario['nombre_usuario'];
 
-  //Busco los legajos que tiene asignado el legajo seleccionado
-  $sql = "SELECT e.legajo, apellido, nombre FROM Personal_fichadas_permisos pfp JOIN empleados e ON e.legajo = pfp.legajo WHERE usuario = $legajo";
-  $stmt = mssql_query($sql,$conn);
+    //Busco los legajos que tiene asignado el legajo seleccionado
+    $sql = "SELECT e.legajo, apellido, nombre FROM Personal_fichadas_permisos pfp JOIN empleados e ON e.legajo = pfp.legajo WHERE usuario = $legajo";
+    $stmt = sqlsrv_query($conn,$sql);
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +34,7 @@ if(isset($_GET['legajo'])){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
     <title> Control acceso a fichadas </title>
 
     <!-- Bootstrap -->
@@ -48,6 +55,20 @@ if(isset($_GET['legajo'])){
 <script type="text/javascript">
 $(document).ready(function() {
   $('#example').DataTable( {
+    "language": {
+          "lengthMenu": "Mostrar _MENU_ registros por pagina",
+          "zeroRecords": "No se encontraron registros",
+          "info": "Pagina _PAGE_ de _PAGES_",
+          "infoEmpty": "No hay registros",
+          "infoFiltered": "(filtrado de _MAX_ registros)",
+          "sSearch":       	"Buscar",
+          "oPaginate": {
+            "sFirst":    	"Primero",
+            "sPrevious": 	"Anterior",
+            "sNext":     	"Siguiente",
+            "sLast":     	"Ultimo"
+          }
+      },
       "scrollY": "500px",
       "scrollCollapse": true
   } );
@@ -89,55 +110,6 @@ $(document).ready(function() {
 
 </script>
   </head>
-  <style type="text/css">
-  body{background: #000;}
-
-     .media
-    {
-        /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
-    }
-    .dp
-    {
-        border:10px solid #eee;
-        transition: all 0.2s ease-in-out;
-    }
-    .dp:hover
-    {
-        border:2px solid #eee;
-        transform:rotate(360deg);
-        -ms-transform:rotate(360deg);
-        -webkit-transform:rotate(360deg);
-        /*-webkit-font-smoothing:antialiased;*/
-    }
-body
-{
-    background-color: #1b1b1b;
-}
-
-.alert-purple { border-color: #694D9F;background: #694D9F;color: #fff; }
-.alert-info-alt { border-color: #B4E1E4;background: #81c7e1;color: #fff; }
-.alert-danger-alt { border-color: #B63E5A;background: #E26868;color: #fff; }
-.alert-warning-alt { border-color: #F3F3EB;background: #E9CEAC;color: #fff; }
-.alert-success-alt { border-color: #19B99A;background: #20A286;color: #fff; }
-.glyphicon { margin-right:10px; }
-.alert a {color: gold;}
-
-.input-group-addon
-{
-    background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142);
-    color: rgb(255, 255, 255);
-}
-.form-control:focus
-{
-    background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142);
-    color: rgb(255, 255, 255);
-}
-
-  </style>
   <body>
 
         <div class="container">
@@ -147,21 +119,22 @@ body
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 
+    <h4 class="text-center bg-info">Control de acceso a fichadas</h4>
 
 <div class="container">
 	<form name="form1" method="post" action="agregar_permiso.php?agente=<?php echo $legajo;?>">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
-                <div class="panel-body"
+                <div class="panel-body">
                 <form class="form form-signup" role="form">
       						<div class="form-group">
       							<div class="input-group">
-      								<span class="input-group-addon"><h5 class="text-center"> Usuario:</h5><span class="glyphicon glyphicon-user"><?php echo $usuario; ?></span> </span>
+      								<span class="input-group-addon"><h5 class="text-center"><i class="fa fa-user fa-fw"></i> Usuario:</h5><?php echo $usuario; ?></span>
                     </div>
-                      <input name="legajo" type="text" id="legajo" class="form-control" placeholder="Legajo a agregar" />
+                      <input name="legajo" type="text" id="legajo" class="form-control" placeholder="Legajo a asignar" />
       						</div>
-					        <input type="submit" name="Submit" value="Agregar"  class="btn btn-sm btn-primary btn-block">
+					        <input type="submit" name="Submit" value="AGREGAR"  class="btn btn-sm btn-primary btn-block">
     					</form>
             </div>
 
@@ -169,7 +142,7 @@ body
 if(isset($_GET['success'])){
 echo "
 <div class='alert alert-success-alt alert-dismissable'>
-                <span class='glyphicon glyphicon-certificate'></span>
+                <span class='glyphicon glyphicon-ok'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
                     ×</button>Listo! Legajo agregado satisfactoriamente.</div>
 ";
@@ -181,7 +154,7 @@ echo "";
 if(isset($_GET['errordat'])){
 echo "
 <div class='alert alert-warning-alt alert-dismissable'>
-                <span class='glyphicon glyphicon-certificate'></span>
+                <span class='glyphicon glyphicon-exclamation-sign'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
                     ×</button>El legajo no existe o ya se encuentra en la tabla.</div>
 ";
@@ -193,7 +166,7 @@ echo "";
 if(isset($_GET['errordb'])){
 echo "
 <div class='alert alert-danger-alt alert-dismissable'>
-                <span class='glyphicon glyphicon-certificate'></span>
+                <span class='glyphicon glyphicon-exclamation-sign'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
                     ×</button>Error, no ha introducido todos los datos.</div>
 ";
@@ -214,20 +187,20 @@ echo "";
                       <th> Legajo </th>
                       <th> Apellido </th>
                       <th> Nombre </th>
-                      <th> Quitar </th>
+                      <th> Eliminar </th>
                   </thead>
                     <tbody>
-                      <?php while($permisos = mssql_fetch_array( $stmt)){ ?>
+                      <?php while($permisos = sqlsrv_fetch_array( $stmt)){ ?>
                         <tr >
                             <td> <?php echo $permisos['legajo']; ?> </td>
                             <td> <?php echo $permisos['apellido']; ?> </td>
                             <td> <?php echo $permisos['nombre']; ?> </td>
-                            <td> <a class="btn btn-primary btn-danger" role="button" legajo="<?php echo $permisos['legajo'];?>" > quitar </a> </td>
+                            <td> <a class="btn btn-primary btn-danger" role="button" legajo="<?php echo $permisos['legajo'];?>" > Eliminar </a> </td>
                         </tr>
                         <?php } ?>
                     </tbody>
         </table>
-<!--href="inc/quitar.php?legajo=<?php echo $permisos['legajo'];?>&usuario=<?php echo $_SESSION['legajo'];?>"-->
+<!--href="inc/quitar.php?legajo=<?php// echo $permisos['legajo'];?>&usuario=<?php// echo $_SESSION['legajo'];?>"-->
         </div>
       </div>
     </div> <!-- /container -->

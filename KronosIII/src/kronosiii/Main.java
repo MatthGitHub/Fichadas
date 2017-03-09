@@ -101,6 +101,8 @@ public class Main extends javax.swing.JFrame {
         jmiFichadas = new javax.swing.JMenuItem();
         jmiMenuPrincipal = new javax.swing.JMenuItem();
         jmiSalir = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jmConfiguracion = new javax.swing.JMenu();
         jmiControlAcceso = new javax.swing.JMenuItem();
         jmiUsuarios = new javax.swing.JMenuItem();
@@ -137,6 +139,13 @@ public class Main extends javax.swing.JFrame {
         jmArchivo.add(jmiSalir);
 
         jMenuBar1.add(jmArchivo);
+
+        jMenu1.setText("Actualizaciones");
+
+        jMenuItem1.setText("Padron de empleados");
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
 
         jmConfiguracion.setText("Configuracion");
 
@@ -229,7 +238,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu jmArchivo;
     private javax.swing.JMenu jmConfiguracion;
     private javax.swing.JMenuItem jmiControlAcceso;

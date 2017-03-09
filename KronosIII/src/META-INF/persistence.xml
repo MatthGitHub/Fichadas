@@ -42,6 +42,7 @@
     <class>kronosiii.Tipodefranco</class>
     <class>kronosiii.Ubicacionreloj</class>
     <class>kronosiii.Tipoausencias</class>
+    <class>kronosiii.negocio.entidades.Roles</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:jtds:sqlserver://10.20.130.17:1433/kronospersonal"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>

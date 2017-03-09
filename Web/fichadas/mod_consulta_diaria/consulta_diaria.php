@@ -6,11 +6,11 @@ include('../inc/validar.php');
 if($_POST['txtFecha']){
 
 $desde = $_POST['txtFecha'];
-$area = $_POST['area'];
+$entsal = $_POST['entsal'];
 $legajo = $_SESSION['legajo'];
 
 
-if($area == 3){
+if($entsal == 3){
   $sql = "SELECT legajo,nombre, apellido, CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,
           entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj
           FROM fichada f
@@ -39,17 +39,17 @@ if($area == 3){
               WHERE usuario = $legajo
               )
           AND fecha = '$desde'
-          AND entradasalida = '$area'
+          AND entradasalida = '$entsal'
           ORDER BY legajo,fecha,hora,entradasalida DESC";
 }
 
-$stmt = mssql_query( $sql,$conn);
+$stmt = sqlsrv_query( $conn,$sql);
 if( $stmt === false ) {
       echo "Error en el query";
      //die( print_r( sqlsrv_errors(), true));
 }
 }else{
-  header("Location: ../index.php?errorpass");
+  header("Location: form_consulta_diaria.php?errordb");
   exit();
 }
 
@@ -60,7 +60,8 @@ if( $stmt === false ) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mis Fichadas</title>
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
+    <title>Parte Diario</title>
 
     <!-- Bootstrap -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -101,6 +102,20 @@ if( $stmt === false ) {
     <script type="text/javascript">
     $(document).ready(function() {
     $('#example').DataTable( {
+      "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por pagina",
+            "zeroRecords": "No se encontraron registros",
+            "info": "Pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros",
+            "infoFiltered": "(filtrado de _MAX_ registros)",
+            "sSearch":       	"Buscar",
+          	"oPaginate": {
+          		"sFirst":    	"Primero",
+          		"sPrevious": 	"Anterior",
+          		"sNext":     	"Siguiente",
+          		"sLast":     	"Ultimo"
+          	}
+        },
         "scrollY":        "500px",
         "scrollCollapse": true,
         "columnDefs": [{ type: 'date-uk', targets: 0 }],
@@ -109,29 +124,6 @@ if( $stmt === false ) {
       } );
     </script>
   </head>
-  <style type="text/css">
-  body{background: #000;}
-
-       .media
-    {
-        /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
-    }
-    .dp
-    {
-        border:10px solid #eee;
-        transition: all 0.2s ease-in-out;
-    }
-    .dp:hover
-    {
-        border:2px solid #eee;
-        transform:rotate(360deg);
-        -ms-transform:rotate(360deg);
-        -webkit-transform:rotate(360deg);
-        /*-webkit-font-smoothing:antialiased;*/
-    }
-  </style>
   <body>
     <div class="container">
       <br>
@@ -139,6 +131,7 @@ if( $stmt === false ) {
       <?php include('../inc/menu.php'); ?>
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
+		<h4 class="text-center bg-info">Listado de Parte diario</h4>
         <div class="row">
               <table id="example" class="display" cellspacing="0" width="100%">
                 	<thead>
@@ -152,7 +145,7 @@ if( $stmt === false ) {
                       <th> Reloj </th>
                   </thead>
                     <tbody>
-                    	<?php while($fichadas = mssql_fetch_array( $stmt)){ ?>
+                    	<?php while($fichadas = sqlsrv_fetch_array($stmt)){ ?>
                         <tr class="success">
                             <td> <?php echo $fichadas['legajo']; ?> </td>
                             <td> <?php echo $fichadas['nombre']; ?> </td>
@@ -169,7 +162,9 @@ if( $stmt === false ) {
 
 				</div>
       </div>
-
+		<div class="panel-footer">
+					<p class="text-center">Direccion de Sistemas - Municipalidad de Bariloche</p>
+		</div>
     </div> <!-- /container -->
   </body>
 </html>

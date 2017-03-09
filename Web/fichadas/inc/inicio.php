@@ -10,7 +10,8 @@ include('validar.php');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Fichadas</title>
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
+    <title>Inicio</title>
 
     <!-- Bootstrap -->
 		<script src="../js/jquery-1.12.3.js"></script>
@@ -23,9 +24,6 @@ include('validar.php');
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <style type="text/css">
-  body{background: #000;}
-  </style>
   <body>
     <br>
         <div class="container">
@@ -33,16 +31,16 @@ include('validar.php');
 		<?php include "menu.php"; ?>
 		<!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1> Consulta de fichadas </h1>
+        <h2><img src="../images/icons/clock_blanco.gif" alt="Municipalidad Bariloche" align="middle" style="margin:0px 0px 0px 0px" height="32" width="32"> Accesos Frecuentes de Fichadas </h2>
         <div class="row">
           <div class="col-lg-5">
             <p>
-  			       <a class="btn btn-lg btn-primary" href="../mod_mis_fichadas/form_mis_fichadas.php" role="button">Mis fichadas &raquo;</a>
+  			       <a class="btn btn-lg btn-direct" href="../mod_mis_fichadas/form_mis_fichadas.php" role="button">Mis fichadas &raquo;</a>
           </p>
         </div>
-            <div class="col-lg-5"><?php if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)){ ?>
+            <div class="col-lg-5"><?php if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)|| ($_SESSION['permiso'] == 3)){ ?>
       				<p>
-      					<a class="btn btn-lg btn-primary" href="../mod_consulta_general/form_consulta_general.php" role="button"> Consulta general de fichadas &raquo;</a>
+      					<a class="btn btn-lg btn-direct" href="../mod_consulta_general/form_consulta_general.php" role="button"> Consulta general de fichadas &raquo;</a>
       				</p>
     				<?php } ?>
           </div>
@@ -51,14 +49,14 @@ include('validar.php');
           <div class="col-md-5"><?php
              if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)){ ?>
               <p>
-                <a class="btn btn-lg btn-primary" href="../mod_consulta_diaria/form_consulta_diaria.php" role="button"> Parte diario &raquo;</a>
+                <a class="btn btn-lg btn-direct" href="../mod_consulta_diaria/form_consulta_diaria.php" role="button"> Parte diario &raquo;</a>
               </p>
             <?php } ?>
         </div>
           <div class="col-md-5"><?php
-  				    if($_SESSION['permiso'] == 0){  ?>
+  				    if(($_SESSION['permiso'] == 0)|| ($_SESSION['permiso'] == 3)){  ?>
       			<p>
-      				<a class="btn btn-lg btn-primary" href="../mod_control_acceso/form_seleccionar_legajo_control_acceso.php" role="button">Control acceso a fichadas &raquo;</a>
+      				<a class="btn btn-lg btn-direct" href="../mod_control_acceso/form_seleccionar_legajo_control_acceso.php" role="button">Control acceso a fichadas &raquo;</a>
       			</p>
   			       <?php } ?>
         </div>
@@ -66,17 +64,12 @@ include('validar.php');
 
 
       </div>
-      <form name="form1" method="post" action="cerrar_sesion.php" align="mid">
-        <div class="form-group">
-          <div class="input-group">
-            <button type="submit" class="btn btn-danger btn-lg btn-block">Cerrar sesion</button>
-          </div>
-        </div>
-    </form>
+		<div class="panel-footer">
+			<p class="text-center">Direccion de Sistemas - Municipalidad de Bariloche</p>
+		</div>
     </div> <!-- /container -->
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-
-    <p align="center"> by M. Benditti. </p>
+	
   </body>
 </html>

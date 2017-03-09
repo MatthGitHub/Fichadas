@@ -2,7 +2,7 @@
 include('../inc/config.php');
 include('../inc/validar.php');
 
-if($_POST['legajo']){
+if(($_POST['legajo'])&&($_POST['nombre'])&&($_POST['apellido'])&&($_POST['tipoDoc'])&&($_POST['documento'])&&($_POST['sexo'])&&($_POST['txtFecha'])){
 
     $legajo = $_POST['legajo'];
     $nombre = $_POST['nombre'];
@@ -42,18 +42,19 @@ if($_POST['legajo']){
 
     //Busco si existe el nombre de usuario
     $slq = "SELECT * FROM empleados WHERE NumDocumento = '$documento'";
-    $stmt = mssql_query($sql,$conn);
+    $stmt = sqlsrv_query($conn,$sql);
     //Compruebo si existe el nombre de usuario
-    if(mssql_num_rows($stmt)>0){
+    if(sqlsrv_num_rows($stmt)>0){
       header("Location:nuevo_usuario.php?errordat");
       exit();
     }else{
       //Busco el ultimo idempleado
       $sql = "SELECT MAX(idEmpleado) as Num FROM empleados";
-      $query = mssql_query($sql);
-      $idempleado = mssql_fetch_array($query);
+      $query = sqlsrv_query($conn,$sql);
+      $idempleado = sqlsrv_fetch_array($query);
       $idempleado = $idempleado['Num'];
       $idempleado = $idempleado + 1;
+
 
 
 
@@ -61,7 +62,7 @@ if($_POST['legajo']){
       (idEmpleado,Legajo,Nombre,Apellido,NumDocumento,Cuil,FechaNacimiento,Domicilio,Sexo,Categoria,Telefono,PersonalACargo,IdFoto,FechaIngreso,Activo,AdicionalPorFuncion,AntiguedadAnterior,Email,Esereno,ToleranciaTarde,HorasATrabajar,IdFuncion,idTipoEmpleado,idLugarTrabajo,idTipoDoc,IdNacionalidad,IdTipoFranco,IdEdificio,OficinaPersonal)
       VALUES ($idempleado,$legajo,'$nombre','$apellido','$documento','$cuil','$txtFecha','$domicilio','$sexo',$categoria,'$telefono',null,null,'$txtFechaIngreso',$activo,null,null,'$correo',$sereno,$tolerancia,$horas,$funcion,$tipEmpleado,$lugar,$tipoDoc,$nacionalidad,NULL,$edificio,$oficop)";
 
-      $error = mssql_query($sql,$conn);
+      $error = sqlsrv_query($conn,$sql);
 
       if($error){
         header("Location: nuevo_empleado.php?success");

@@ -1,9 +1,10 @@
 <?php
+
 include('../inc/config.php');
 include('../inc/validar.php');
 
 $sql = "SELECT nombre_usuario,e.legajo,u.activo,fk_rol,  (nombre +' '+ apellido ) AS empleado FROM usuarios_web u JOIN empleados e ON u.idempleado = e.idempleado";
-$stmt = mssql_query($sql,$conn);
+$stmt = sqlsrv_query($conn,$sql);
 
 
 
@@ -15,6 +16,7 @@ $stmt = mssql_query($sql,$conn);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
     <title>Usuarios</title>
 
     <!-- Bootstrap -->
@@ -36,6 +38,20 @@ $stmt = mssql_query($sql,$conn);
     <script type="text/javascript">
     $(document).ready(function() {
     $('#example').DataTable( {
+      "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por pagina",
+            "zeroRecords": "No se encontraron registros",
+            "info": "Pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros",
+            "infoFiltered": "(filtrado de _MAX_ registros)",
+            "sSearch":       	"Buscar",
+          	"oPaginate": {
+          		"sFirst":    	"Primero",
+          		"sPrevious": 	"Anterior",
+          		"sNext":     	"Siguiente",
+          		"sLast":     	"Ultimo"
+          	}
+        },
         "scrollY":        "500px",
         "scrollCollapse": true,
         "order":[[0,"desc"]]
@@ -63,7 +79,7 @@ $stmt = mssql_query($sql,$conn);
 
                $.ajax({
                    type: "POST",
-                   url: "inc/eliminar.php",
+                   url: "eliminar.php",
                    data: dataString,
                    success: function() {
                       var row = $(this).closest('tr').attr('id');
@@ -78,31 +94,8 @@ $stmt = mssql_query($sql,$conn);
 
 
   </head>
-  <style type="text/css">
-  body{background: #000;}
-
-     .media
-    {
-        /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
-    }
-    .dp
-    {
-        border:10px solid #eee;
-        transition: all 0.2s ease-in-out;
-    }
-    .dp:hover
-    {
-        border:2px solid #eee;
-        transform:rotate(360deg);
-        -ms-transform:rotate(360deg);
-        -webkit-transform:rotate(360deg);
-        /*-webkit-font-smoothing:antialiased;*/
-    }
-  </style>
   <body>
-        <div class="container">
+	<div class="container">
 
       <!-- Static navbar -->
      <!-- Static navbar -->
@@ -110,6 +103,7 @@ $stmt = mssql_query($sql,$conn);
       <?php include('../inc/menu.php'); ?>
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
+	  <h4 class="text-center bg-info">Listado de Usuarios</h4>
         <div class="row">
               <table id="example" class="display" cellspacing="0" width="100%">
                 	<thead>
@@ -121,7 +115,7 @@ $stmt = mssql_query($sql,$conn);
                       <th> Eliminar </th>
                   </thead>
                     <tbody>
-                    	<?php while($usuarios = mssql_fetch_array( $stmt)){ ?>
+                    	<?php while($usuarios = sqlsrv_fetch_array( $stmt)){ ?>
                         <tr class="success">
                             <td> <?php echo $usuarios['nombre_usuario']; ?> </td>
                             <td> <?php echo $usuarios['empleado']; ?> </td>
@@ -138,7 +132,9 @@ $stmt = mssql_query($sql,$conn);
 
 				</div>
       </div>
-
+		<div class="panel-footer">
+					<p class="text-center">Direccion de Sistemas - Municipalidad de Bariloche</p>
+		</div>
     </div> <!-- /container -->
 
   </body>

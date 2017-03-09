@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -29,10 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UsuariosWeb.findByIdUsuario", query = "SELECT u FROM UsuariosWeb u WHERE u.idUsuario = :idUsuario"),
     @NamedQuery(name = "UsuariosWeb.findByNombreUsuario", query = "SELECT u FROM UsuariosWeb u WHERE u.nombreUsuario = :nombreUsuario"),
     @NamedQuery(name = "UsuariosWeb.findByClave", query = "SELECT u FROM UsuariosWeb u WHERE u.clave = :clave"),
-    @NamedQuery(name = "UsuariosWeb.findByLegajo", query = "SELECT u FROM UsuariosWeb u WHERE u.legajo = :legajo"),
-    @NamedQuery(name = "UsuariosWeb.findByIdEmpleado", query = "SELECT u FROM UsuariosWeb u WHERE u.idEmpleado = :idEmpleado"),
     @NamedQuery(name = "UsuariosWeb.findByActivo", query = "SELECT u FROM UsuariosWeb u WHERE u.activo = :activo"),
-    @NamedQuery(name = "UsuariosWeb.findByFkRol", query = "SELECT u FROM UsuariosWeb u WHERE u.fkRol = :fkRol"),
     @NamedQuery(name = "UsuariosWeb.findByIdExtreme", query = "SELECT u FROM UsuariosWeb u WHERE u.idExtreme = :idExtreme")})
 public class UsuariosWeb implements Serializable {
 
@@ -46,16 +45,16 @@ public class UsuariosWeb implements Serializable {
     private String nombreUsuario;
     @Column(name = "clave")
     private String clave;
-    @Column(name = "legajo")
-    private String legajo;
-    @Column(name = "idEmpleado")
-    private Integer idEmpleado;
     @Column(name = "activo")
     private Boolean activo;
-    @Column(name = "fk_rol")
-    private Integer fkRol;
     @Column(name = "idExtreme")
     private String idExtreme;
+    @JoinColumn(name = "idEmpleado", referencedColumnName = "IdEmpleado")
+    @ManyToOne
+    private Empleados idEmpleado;
+    @JoinColumn(name = "fk_rol", referencedColumnName = "idRol")
+    @ManyToOne
+    private Roles fkRol;
 
     public UsuariosWeb() {
     }
@@ -88,22 +87,6 @@ public class UsuariosWeb implements Serializable {
         this.clave = clave;
     }
 
-    public String getLegajo() {
-        return legajo;
-    }
-
-    public void setLegajo(String legajo) {
-        this.legajo = legajo;
-    }
-
-    public Integer getIdEmpleado() {
-        return idEmpleado;
-    }
-
-    public void setIdEmpleado(Integer idEmpleado) {
-        this.idEmpleado = idEmpleado;
-    }
-
     public Boolean getActivo() {
         return activo;
     }
@@ -112,20 +95,28 @@ public class UsuariosWeb implements Serializable {
         this.activo = activo;
     }
 
-    public Integer getFkRol() {
-        return fkRol;
-    }
-
-    public void setFkRol(Integer fkRol) {
-        this.fkRol = fkRol;
-    }
-
     public String getIdExtreme() {
         return idExtreme;
     }
 
     public void setIdExtreme(String idExtreme) {
         this.idExtreme = idExtreme;
+    }
+
+    public Empleados getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(Empleados idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    public Roles getFkRol() {
+        return fkRol;
+    }
+
+    public void setFkRol(Roles fkRol) {
+        this.fkRol = fkRol;
     }
 
     @Override

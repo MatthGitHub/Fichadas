@@ -36,7 +36,7 @@ public class Usuarios extends MiPanel {
     
     private void cargarTabla(){
         List <DtoUsuariosW> usuarios = FacadeNegocio.getFacadeNegocio().traerUsuarios();
-        String v[] = new String[4];
+        String v[] = new String[3];
         modelo = (DefaultTableModel) jtUsuarios.getModel();
         for(int i = 0; i < usuarios.size(); i++){
             System.out.println("-------------------------- Tablas usuarios -------------------------------");
@@ -45,8 +45,7 @@ public class Usuarios extends MiPanel {
         for(int i = 0; i < usuarios.size(); i++){
             v[0] = usuarios.get(i).getNombreUsuario();
             v[1] = usuarios.get(i).getActivo().toString();
-            v[2] = usuarios.get(i).getLegajo();
-            v[3] = usuarios.get(i).getIdEmpleado().toString();
+            v[2] = usuarios.get(i).getIdEmpleado().toString();
             modelo.addRow(v);
         }
     }

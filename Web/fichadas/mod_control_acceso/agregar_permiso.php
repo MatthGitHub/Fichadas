@@ -8,17 +8,23 @@ if(isset($_POST['legajo'])){
 
     // Valido si existe el legajo introducido
     $sql = "SELECT * FROM Empleados WHERE legajo = $legajo";
-    $existe = mssql_query($sql,$conn);
-    if(mssql_num_rows($existe) > 0){
+    $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+    $params = array();
+
+    $existe = sqlsrv_query($conn,$sql,$params,$options);
+    if(sqlsrv_num_rows($existe) > 0){
       //Valido que no este ya en la tabla el legajo introducido
       $sql = "SELECT * FROM Personal_fichadas_permisos WHERE Usuario = $aLegajo AND legajo = $legajo";
-      $existe = mssql_query($sql,$conn);
-      if(mssql_num_rows($existe) > 0){
+      $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+      $params = array();
+      $existe = sqlsrv_query($conn,$sql,$params,$options);
+
+      if(sqlsrv_num_rows($existe) > 0){
         header("Location: form_control_acceso.php?errordat&legajo={$aLegajo}");
         exit();
       }else{
         $sql = "INSERT INTO Personal_fichadas_permisos VALUES ( $aLegajo,$legajo)";
-        mssql_query($sql,$conn);
+        sqlsrv_query($conn,$sql);
         header("Location: form_control_acceso.php?success&legajo={$aLegajo}");
         exit();
       }

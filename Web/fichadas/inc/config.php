@@ -1,17 +1,14 @@
 <?php
-//$serverName = "SECUNDARIO\MSSQLSERVER"; //serverName\instanceName
-//$connectionInfo = array( "Database"=>"KRONOSPERSONAL", "UID"=>"sa", "PWD"=>"");
-//$conn = sqlsrv_connect( $serverName, $connectionInfo);
-
-$conn = mssql_connect("10.20.130.17","sa","");
-
+$serverName = "10.20.130.242"; //serverName\instanceName
+$connectionInfo = array( "Database"=>"KRONOSPERSONAL", "UID"=>"sa", "PWD"=>"tacuari");
+$conn = sqlsrv_connect( $serverName, $connectionInfo);
 
 if( $conn ) {
-	    mssql_select_db("KRONOSPERSONAL",$conn);
+	    //echo "Conexión establecida.<br />";
       session_start();
 }else{
      echo "Conexión no se pudo establecer.<br />";
-     //die( print_r( sqlsrv_errors(), true));
+     die( print_r( sqlsrv_errors(), true));
 }
 
 ?>

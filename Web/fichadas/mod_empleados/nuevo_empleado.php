@@ -1,32 +1,37 @@
 <?php
+
 include('../inc/config.php');
 include('../inc/validar.php');
 
+$existe = 0;
 if(isset($_POST['legajob'])){
   $legajo = $_POST['legajob'];
-
   $sql = "SELECT * FROM empleados WHERE legajo = $legajo";
-  $query = mssql_query($sql);
-  $cant = mssql_num_rows($query);
+  $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+  $params = array();
+  $query = sqlsrv_query($conn,$sql,$params,$options);
+
+  $cant  = sqlsrv_num_rows($query);
 
   if($cant > 0){
     $existe = 1;
-
     $sql = "SELECT * FROM empleados WHERE legajo = $legajo";
-    $empleado = mssql_query($sql);
-    $empleado = mssql_fetch_array($empleado);
+    $empleado = sqlsrv_query($conn,$sql);
+    $empleado = sqlsrv_fetch_array($empleado);
 
     $legajo = $empleado['Legajo'];
     $doc = $empleado['NumDocumento'];
     $nombre = $empleado['Nombre'];
     $apellido = $empleado['Apellido'];
     $cuil = $empleado['Cuil'];
-    $fechaNac = $empleado['FechaNacimiento'];
+    $fechaNac = $empleado['FechaNacimiento']->format('d/m/Y');
+    //$fechaNac = $empleado['FechaNacimiento'];
     $domicilio = $empleado['Domicilio'];
     $sexo = $empleado['Sexo'];
     $categoria = $empleado['Categoria'];
     $telefono = $empleado['Telefono'];
-    $fechaIng = $empleado['FechaIngreso'];
+    $fechaIng = $empleado['FechaIngreso']->format('d/m/Y');
+    //$fechaIng = $empleado['FechaIngreso'];
     $activo = $empleado['Activo'];
     $email = $empleado['Email'];
     $tolerancia = $empleado['ToleranciaTarde'];
@@ -41,26 +46,34 @@ if(isset($_POST['legajob'])){
     $franco = $empleado['IdTipoFranco'];
     $personal = $empleado['OficinaPersonal'];
 
+  }else{
+    $sereno = 0;
+    $activo = 0;
   }
+}else{
+  $legajo = '';
+  $sereno = 0;
+  $activo = 0;
 }
+
+
 $sql = "SELECT idTipoDoc,Abreviacion FROM TIPODOCUMENTO";
-$documento = mssql_query($sql,$conn);
+$documento = sqlsrv_query($conn,$sql);
 
 $sql = "SELECT idFuncion, Descripcion FROM FUNCION";
-$funcion = mssql_query($sql,$conn);
+$funcion = sqlsrv_query($conn,$sql);
 
 $sql = "SELECT idLugarTrabajo, Descripcion FROM LUGARDETRABAJO";
-$lugar = mssql_query($sql,$conn);
+$lugar = sqlsrv_query($conn,$sql);
 
 $sql = "SELECT idNacionalidad, Descripcion FROM NACIONALIDAD";
-$nacionalidad = mssql_query($sql,$conn);
+$nacionalidad = sqlsrv_query($conn,$sql);
 
 $sql = "SELECT idEdificio, Descripcion FROM EDIFICIO";
-$edificio = mssql_query($sql,$conn);
+$edificio = sqlsrv_query($conn,$sql);
 
 $sql = "SELECT idTipoEmpleado, Descripcion FROM TIPOEMPLEADO";
-$tipoEmpleado = mssql_query($sql,$conn);
-
+$tipoEmpleado = sqlsrv_query($conn,$sql);
 
 ?>
 <!DOCTYPE html>
@@ -69,6 +82,7 @@ $tipoEmpleado = mssql_query($sql,$conn);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
     <title>Nuevo Empleado</title>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -80,7 +94,7 @@ $tipoEmpleado = mssql_query($sql,$conn);
 
     <!-- Bootstrap -->
     <script src="../js/bootstrap.min.js"></script>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
     <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -90,54 +104,6 @@ $tipoEmpleado = mssql_query($sql,$conn);
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <style type="text/css">
-  body{background: #000;}
-
-     .media
-    {
-        /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
-    }
-    .dp
-    {
-        border:10px solid #eee;
-        transition: all 0.2s ease-in-out;
-    }
-    .dp:hover
-    {
-        border:2px solid #eee;
-        transform:rotate(360deg);
-        -ms-transform:rotate(360deg);
-        -webkit-transform:rotate(360deg);
-        /*-webkit-font-smoothing:antialiased;*/
-    }
-body
-{
-    background-color: #1b1b1b;
-}
-
-.alert-purple { border-color: #694D9F;background: #694D9F;color: #fff; }
-.alert-info-alt { border-color: #B4E1E4;background: #81c7e1;color: #fff; }
-.alert-danger-alt { border-color: #B63E5A;background: #E26868;color: #fff; }
-.alert-warning-alt { border-color: #F3F3EB;background: #E9CEAC;color: #fff; }
-.alert-success-alt { border-color: #19B99A;background: #20A286;color: #fff; }
-.glyphicon { margin-right:10px; }
-.alert a {color: gold;}
-
-.input-group-addon
-{
-    background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142);
-    color: rgb(255, 255, 255);
-}
-.form-control:focus
-{
-    background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142);
-    color: rgb(255, 255, 255);
-}
-  </style>
   <body>
 
         <div class="container">
@@ -146,7 +112,11 @@ body
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-
+        <?php if($existe == 0){ ?>
+		<h4 class="text-center bg-info">Nuevo Empleado</h4>
+    <?php }else{ ?>
+      <h4 class="text-center bg-info">Editar Empleado</h4>
+      <?php } ?>
       <div class="container">
         <form name="form1" method="post" action="nuevo_empleado.php">
           <div class="row">
@@ -156,11 +126,11 @@ body
                   <form class="form form-signup" role="form">
                     <div class="form-group">
                       <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
                         <input name="legajob" type="text" id="legajob" class="form-control" placeholder="Buscar legajo si existe" />
                       </div>
                     </div>
-                    <input type="submit" name="Submit" value="Buscar"  class="btn btn-sm btn-primary btn-block">
+                    <input type="submit" name="Submit" value="BUSCAR"  class="btn btn-sm btn-primary btn-block">
                   </form>
                 </div>
               </div>
@@ -171,49 +141,87 @@ body
 
 
 <div class="container">
+	<?php
+	if(isset($_GET['success'])){
+	echo "
+	<div class='alert alert-success-alt alert-dismissable'>
+					<span class='glyphicon glyphicon-ok'></span>
+					<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+						×</button>Listo! Empleado creado satisfactoriamente.</div>";
+	}else{
+	echo "";
+	}
+	?>
+	<?php
+	if(isset($_GET['errordat'])){
+	echo "
+	<div class='alert alert-warning-alt alert-dismissable'>
+					<span class='glyphicon glyphicon-exclamation-sign'></span>
+					<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+						×</button> No ha introducido todos los datos </div>
+	";
+	}else{
+	echo "";
+	}
+	?>
+	<?php
+	if(isset($_GET['errordb'])){
+	echo "
+	<div class='alert alert-danger-alt alert-dismissable'>
+					<span class='glyphicon glyphicon-exclamation-sign'></span>
+					<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+						×</button>Error en la base de datos al intentar guardar.</div>
+	";
+	}else{
+	echo "";
+	}
+	?>
+  <?php if($existe == 0){ ?>
 	<form name="form1" method="post" action="insertar_empleado.php">
+    <?php }else{ ?>
+      <form name="form1" method="post" action="modificar_empleado.php">
+        <?php } ?>
     <div class="row">
         <div class="col-md-12 col-md-offset">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4 class="text-center bg-info"> Nuevo Empleado</h4>
                     <form class="form form-signup" role="form">
                       <div class="col-md-6 col-md-offset">
                         <div class="panel panel-default">
                                     <div class="form-group">
                                        <div class="input-group">
-                                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Legajo </span></span>
+                                           <span class="input-group-addon"><i class="fa fa-folder fa-fw"></i> Legajo</span>
                                               <input name="legajo" type="text" class="form-control"  id="legajo" value="<?php echo $legajo; ?>" readonly />
                                        </div>
                                     </div>
 
                                     <div class="form-group">
                                           <div class="input-group">
-                                              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Nombre </span></span>
-                                              <? if($existe == 1){ ?>
+                                              <span class="input-group-addon"><i class="fa fa-keyboard-o fa-fw"></i> Nombre</span>
+                                              <?php if($existe == 1){ ?>
                                               <input name="nombre" type="text" class="form-control"  id="nombre" value="<?php echo $nombre; ?>" />
-                                              <? }else{ ?>
-                                              <input name="nombre" type="text" class="form-control"  id="nombre" placeholder="Nombre" />
-                                              <? } ?>
+                                              <?php }else{ ?>
+                                              <input name="nombre" type="text" class="form-control"  id="nombre" />
+                                              <?php } ?>
                                           </div>
                                       </div>
 
                                     <div class="form-group">
                                        <div class="input-group">
-                                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Apellido </span></span>
-                                           <? if($existe == 1){ ?>
+                                           <span class="input-group-addon"><i class="fa fa-keyboard-o fa-fw"></i> Apellido</span>
+                                           <?php if($existe == 1){ ?>
                                            <input name="apellido" type="text" class="form-control"  id="apellido" value="<?php echo $apellido; ?>" />
-                                           <? }else{ ?>
-                                           <input name="apellido" type="text" class="form-control"  id="apellido" placeholder="Apellido" />
-                                           <? } ?>
+                                           <?php }else{ ?>
+                                           <input name="apellido" type="text" class="form-control"  id="apellido"/>
+                                           <?php } ?>
                                        </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Tipo documento </span></span>
+                                        <span class="input-group-addon"><i class="fa fa-id-card-o fa-fw"></i> Tipo documento</span>
                                         <div class="col-xs-15 selectContainer">
                                             <select class="form-control" id="tipoDoc" name="tipoDoc">
-                                                <?php while($documentos = mssql_fetch_array($documento)){
+                                                <?php while($documentos = sqlsrv_fetch_array($documento)){
                                                 if($documentos['idTipoDoc'] == $tipoDoc){ ?>
                                                 <option value=<?php echo $documentos['idTipoDoc']; ?> selected ><?php echo $documentos['Abreviacion']; ?></option>
                                                 <?php }else{ ?>
@@ -225,39 +233,39 @@ body
 
                                     <div class="form-group">
                                        <div class="input-group">
-                                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> DNI </span></span>
-                                           <? if($existe == 1){ ?>
+                                           <span class="input-group-addon"><i class="fa fa-id-card fa-fw"></i> DNI</span>
+                                           <?php if($existe == 1){ ?>
                                            <input name="documento" type="text" class="form-control"  id="documento" value="<?php echo $doc; ?>" />
-                                           <? }else{ ?>
-                                           <input name="documento" type="text" class="form-control"  id="documento" placeholder="Nº de Documento" />
-                                           <? } ?>
+                                           <?php }else{ ?>
+                                           <input name="documento" type="text" class="form-control"  id="documento"/>
+                                           <?php } ?>
                                        </div>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> CUIL </span></span>
-                                            <? if($existe == 1){ ?>
+                                            <span class="input-group-addon"><i class="fa fa-id-badge fa-fw"></i> CUIL</span>
+                                            <?php if($existe == 1){ ?>
                                             <input name="cuil" type="text" class="form-control"  id="cuil" value="<?php echo $cuil; ?>" />
-                                            <? }else{ ?>
-                                            <input name="cuil" type="text" class="form-control"  id="cuil" placeholder="C.U.I.L." />
-                                            <? } ?>
+                                            <?php }else{ ?>
+                                            <input name="cuil" type="text" class="form-control"  id="cuil" />
+                                            <?php } ?>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                        <div class="input-group">
-                                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Domicilio </span></span>
-                                           <? if($existe == 1){ ?>
+                                           <span class="input-group-addon"><i class="fa fa-map-marker fa-fw"></i> Domicilio</span>
+                                           <?php if($existe == 1){ ?>
                                            <input name="domicilio" type="text" class="form-control"  id="domicilio" value="<?php echo $domicilio; ?>" />
-                                           <? }else{ ?>
-                                           <input name="domicilio" type="text" class="form-control"  id="domicilio" placeholder="Domicilio" />
-                                           <? } ?>
+                                           <?php }else{ ?>
+                                           <input name="domicilio" type="text" class="form-control"  id="domicilio"/>
+                                           <?php } ?>
                                        </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Sexo </span></span>
+                                        <span class="input-group-addon"><i class="fa fa-venus-mars fa-fw"></i> Género</span>
                                         <div class="col-xs-15 selectContainer">
                                             <select class="form-control" name="sexo" id="sexo">
                                                 <?php if($sexo == 'Masculino'){ ?>
@@ -272,10 +280,10 @@ body
                                     </div>
 
                                     <div class="form-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Funcion </span></span>
+                                        <span class="input-group-addon"><i class="fa fa-genderless fa-fw"></i> Funcion</span>
                                         <div class="col-xs-15 selectContainer">
                                             <select class="form-control" name="funcion" id="funcion">
-                                                <?php while($funciones = mssql_fetch_array($funcion)){
+                                                <?php while($funciones = sqlsrv_fetch_array($funcion)){
                                                 if($func == $funciones['idFuncion']){ ?>
                                                 <option value=<?php echo $funciones['idFuncion']; ?> selected ><?php echo $funciones['Descripcion']; ?></option>
                                                 <?php }else{ ?>
@@ -286,10 +294,10 @@ body
                                     </div>
 
                                     <div class="form-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Lugar de trabajo </span></span>
+                                        <span class="input-group-addon"><i class="fa fa-building fa-fw"></i> Lugar de trabajo</span>
                                         <div class="col-xs-15 selectContainer">
                                             <select class="form-control" name="lugar" id="lugar">
-                                                <?php while($lugares = mssql_fetch_array($lugar)){
+                                                <?php while($lugares = sqlsrv_fetch_array($lugar)){
                                                 if($lug == $lugares['idLugarTrabajo']){ ?>
                                                 <option value=<?php echo $lugares['idLugarTrabajo']; ?> selected ><?php echo $lugares['Descripcion']; ?></option>
                                                 <?php }else{ ?>
@@ -300,10 +308,10 @@ body
                                     </div>
 
                                     <div class="form-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Nacionalidad </span></span>
+                                        <span class="input-group-addon"><i class="fa fa-globe fa-fw"></i> Nacionalidad</span>
                                         <div class="col-xs-15 selectContainer">
                                             <select class="form-control" id="nacionalidad" name="nacionalidad">
-                                                <?php while($nacionalidades = mssql_fetch_array($nacionalidad)){
+                                                <?php while($nacionalidades = sqlsrv_fetch_array($nacionalidad)){
                                                   if($nacio == $nacionalidades['idNacionalidad']){ ?>
                                                 <option value=<?php echo $nacionalidades['idNacionalidad']; ?> selected ><?php echo $nacionalidades['Descripcion']; ?></option>
                                                 <?php }else{ ?>
@@ -317,10 +325,10 @@ body
                       <div class="col-md-6 col-md-offset">
                         <div class="panel panel-default">
                               <div class="form-group">
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Edificio </span></span>
+                                  <span class="input-group-addon"><i class="fa fa-building-o fa-fw"></i> Edificio</span>
                                   <div class="col-xs-15 selectContainer">
                                       <select class="form-control" id="edificio" name="edificio">
-                                          <?php while($edificios = mssql_fetch_array($edificio)){
+                                          <?php while($edificios = sqlsrv_fetch_array($edificio)){
                                           if($edif == $edificios['idEdificio']){ ?>
                                           <option value=<?php echo $edificios['idEdificio']; ?> selected ><?php echo $edificios['Descripcion']; ?></option>
                                           <?php }else{ ?>
@@ -331,10 +339,10 @@ body
                               </div>
 
                               <div class="form-group">
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Tipo empleado </span></span>
+                                  <span class="input-group-addon"><i class="fa fa-users fa-fw"></i> Tipo empleado</span>
                                   <div class="col-xs-15 selectContainer">
                                       <select class="form-control" id="empleado" name="empleado">
-                                          <?php while($empleados = mssql_fetch_array($tipoEmpleado)){
+                                          <?php while($empleados = sqlsrv_fetch_array($tipoEmpleado)){
                                           if($tipoEmp == $empleados['idTipoEmpleado']){ ?>
                                           <option value=<?php echo $empleados['idTipoEmpleado']; ?>><?php echo $empleados['Descripcion']; ?></option>
                                           <?php }else{ ?>
@@ -346,79 +354,80 @@ body
 
                               <div class="form-group">
                                      <div class="input-group">
-                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Email </span></span>
-                                         <? if($existe == 1){ ?>
+                                         <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i> Email</span>
+                                         <?php if($existe == 1){ ?>
                                          <input name="correo" type="text" class="form-control"  id="correo" value="<?php echo $email; ?>" />
-                                         <? }else{ ?>
-                                         <input name="correo" type="text" class="form-control"  id="correo" placeholder="Correo" />
-                                         <? } ?>
+                                         <?php }else{ ?>
+                                         <input name="correo" type="text" class="form-control"  id="correo"/>
+                                         <?php } ?>
                                      </div>
                                  </div>
 
                               <div class="form-group">
                                 <span class="input-group-addon"> Fecha nacimiento </span>
                                 <div class='input-group date' id='divMiCalendario'>
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                  <? if($existe == 1){ ?>
+
+                                  <?php if($existe == 1){ ?>
                                   <input name="txtFecha" type='text' id="txtFecha" class="form-control" value="<?php echo $fechaNac; ?>"  readonly/>
-                                  <? }else{ ?>
-                                  <input name="txtFecha" type='text' id="txtFecha" class="form-control" placeholder="Fecha de nacimiento"  readonly/>
-                                  <? } ?>
+                                  <?php }else{ ?>
+                                  <input name="txtFecha" type='text' id="txtFecha" class="form-control" readonly/>
+                                  <?php } ?>
+								   <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                                 </div>
                               </div>
 
                               <div class="form-group">
                                 <span class="input-group-addon"> Fecha Ingreso </span>
                                 <div class='input-group date' id='divMiCalendario2'>
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                  <? if($existe == 1){ ?>
+                                  <?php if($existe == 1){ ?>
                                   <input name="txtFechaIngreso" type='text' id="txtFechaIngreso" class="form-control" value="<?php echo $fechaIng; ?>"  readonly/>
-                                  <? }else{ ?>
-                                  <input name="txtFechaIngreso" type='text' id="txtFechaIngreso" class="form-control" placeholder="Fecha de ingreso"  readonly/>
-                                  <? } ?>
+                                  <?php }else{ ?>
+                                  <input name="txtFechaIngreso" type='text' id="txtFechaIngreso" class="form-control" readonly/>
+                                  <?php } ?>
+								  <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                                 </div>
                               </div>
 
                               <div class="form-group">
                                  <div class="input-group">
-                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Telefono </span></span>
-                                     <? if($existe == 1){ ?>
+                                     <span class="input-group-addon"><i class="fa fa-phone fa-fw"></i> Telefono</span>
+                                     <?php if($existe == 1){ ?>
                                      <input name="telefono" type="text" class="form-control"  id="telefono" value="<?php echo $telefono; ?>" />
-                                     <? }else{ ?>
-                                     <input name="telefono" type="text" class="form-control"  id="telefono" placeholder="Telefono" />
-                                     <? } ?>
+                                     <?php }else{ ?>
+                                     <input name="telefono" type="text" class="form-control"  id="telefono" />
+                                     <?php } ?>
                                  </div>
                               </div>
 
                               <div class="form-group">
                                  <div class="input-group">
-                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Categoria </span></span>
-                                     <? if($existe == 1){ ?>
+                                     <span class="input-group-addon"><i class="fa fa-star-o fa-fw"></i> Categoria</span>
+                                     <?php if($existe == 1){ ?>
                                      <input name="categoria" type="text" class="form-control"  id="categoria" value="<?php echo $categoria; ?>" />
-                                     <? }else{ ?>
-                                     <input name="categoria" type="text" class="form-control"  id="categoria" placeholder="Categoria" />
-                                     <? } ?>
+                                     <?php }else{ ?>
+                                     <input name="categoria" type="text" class="form-control"  id="categoria"/>
+                                     <?php } ?>
                                  </div>
                               </div>
 
                               <div class="checkbox">
-                                <? if($sereno == 1){ ?>
+                                <?php if($sereno == 1){ ?>
                                 <label><input name="sereno" type="checkbox" value="1" checked>¿Es sereno?</label>
-                                <? }else{ ?>
+                                <?php }else{ ?>
                                 <label><input name="sereno" type="checkbox" value="1">¿Es sereno?</label>
-                                <? } ?>
+                                <?php } ?>
                               </div>
 
                               <div class="checkbox">
-                                <? if($activo == 1){ ?>
+                                <?php if($activo == 1){ ?>
                                 <label><input name="activo" type="checkbox" value="1" checked > ACTIVO </label>
-                                <? }else{ ?>
+                                <?php }else{ ?>
                                 <label><input name="activo" type="checkbox" value="1" > ACTIVO </label>
-                                <? } ?>
+                                <?php } ?>
                               </div>
 
                               <div class="form-group">
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Horas que trabaja por dia </span></span>
+                                  <span class="input-group-addon"><i class="fa fa-clock-o fa-fw"></i> Horas Jornada Laboral </span>
                                   <div class="col-xs-15 selectContainer">
                                       <select class="form-control" name="horas">
                                         <?php
@@ -481,7 +490,7 @@ body
                               </div>
 
                               <div class="form-group">
-                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"> Tolerancia llegadas tarde </span></span>
+                                  <span class="input-group-addon"><i class="fa fa-handshake-o fa-fw"></i> Tolerancia Llegadas Tarde</span>
                                   <div class="col-xs-15 selectContainer">
                                     <select class="form-control" name="tolerancia">
                                       <?php
@@ -545,61 +554,32 @@ body
 
                               <div class="form-group">
                                  <div class="input-group">
-                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"> Oficina Personal</span></span>
-                                     <? if($existe == 1){ ?>
+                                     <span class="input-group-addon"><i class="fa fa-compass fa-fw"></i> Oficina Personal</span>
+                                     <?php if($existe == 1){ ?>
                                      <input name="oficop" type="text" class="form-control"  id="oficop" value="<?php echo $personal; ?>" />
-                                     <? }else{ ?>
-                                     <input name="oficop" type="text" class="form-control"  id="oficop" placeholder="Oficina Personal" />
-                                     <? } ?>
+                                     <?php }else{ ?>
+                                     <input name="oficop" type="text" class="form-control"  id="oficop"/>
+                                     <?php } ?>
                                  </div>
                               </div>
                           </div>
                         </div>
-                <input type="submit" name="Submit" value="Guardar"  class="btn btn-sm btn-primary btn-block">
+                        <?php if($existe == 0){ ?>
+                          <input type="submit" name="Submit" value="GUARDAR"  class="btn btn-sm btn-primary btn-block">
+                        <?php }else{ ?>
+                            <input type="submit" name="Submit" value="MODIFICAR"  class="btn btn-sm btn-primary btn-block">
+                            <?php } ?>
                 </div>
               </form>
             </div>
-
-<?php
-if(isset($_GET['success'])){
-echo "
-<div class='alert alert-success-alt alert-dismissable'>
-                <span class='glyphicon glyphicon-certificate'></span>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Listo! Empleado creado satisfactoriamente.</div>";
-}else{
-echo "";
-}
-?>
-<?php
-if(isset($_GET['errordat'])){
-echo "
-<div class='alert alert-warning-alt alert-dismissable'>
-                <span class='glyphicon glyphicon-certificate'></span>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button> No ha introducido todos los datos </div>
-";
-}else{
-echo "";
-}
-?>
-<?php
-if(isset($_GET['errordb'])){
-echo "
-<div class='alert alert-danger-alt alert-dismissable'>
-                <span class='glyphicon glyphicon-certificate'></span>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Error en la base de datos al intentar guardar.</div>
-";
-}else{
-echo "";
-}
-?>
         </div>
     </div>
 </div>
 </form>
 </div>
+	<div class="panel-footer">
+		<p class="text-center">Direccion de Sistemas - Municipalidad de Bariloche</p>
+	</div>
     </div> <!-- /container -->
     <script type="text/javascript">
     $('#divMiCalendario').datetimepicker({

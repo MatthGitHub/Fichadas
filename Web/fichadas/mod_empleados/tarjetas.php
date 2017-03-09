@@ -2,25 +2,29 @@
 include('../inc/config.php');
 include('../inc/validar.php');
 
-if(isset($_GET['legajo'])){
-  $legajo = $_GET['legajo'];
+if($_POST['legajo']){
+  $legajo = $_POST['legajo'];
   //echo "Entro por GET: ".$legajo;
 }else{
-  $legajo = $_POST['legajo'];
-  //echo "Entro por POST: ".$legajo;
+  if($_GET['legajo']){
+    $legajo = $_GET['legajo'];
+  }else{
+    header("Location: form_seleccionar_legajo_tarjeta.php?errordb");
+  }
+
 }
 
 
-  $sql = "SELECT nombre +' '+apellido AS nombre, uw.idEmpleado FROM usuarios_web uw JOIN empleados e 	ON uw.idempleado = e.idempleado WHERE e.legajo = $legajo";
-  $stmt = mssql_query($sql,$conn);
-  $usuario = mssql_fetch_array($stmt);
+  $sql = "SELECT nombre +' '+apellido AS nombre,idEmpleado FROM empleados WHERE legajo = $legajo";
+  $stmt = sqlsrv_query($conn,$sql);
+  $usuario = sqlsrv_fetch_array($stmt);
   $empleado = $usuario['idEmpleado'];
   $usuario = $usuario['nombre'];
 
 
   //Busco las tarjetas que tiene asignado el legajo seleccionado
   $sql = "SELECT idTarjeta, CONVERT(VARCHAR(12),fechaalta,3) as fechaalta,CONVERT(VARCHAR(12),fechabaja,3) AS fechabaja, habilitado,descripcion as motivo FROM tarjeta t JOIN motivos m 	ON t.idMotivo = m.idMotivo WHERE idEmpleado = $empleado";
-  $stmt = mssql_query($sql,$conn);
+  $stmt = sqlsrv_query($conn,$sql);
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +33,8 @@ if(isset($_GET['legajo'])){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Tarjetas </title>
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
+    <title>Tarjetas asignadas</title>
 
     <!-- Bootstrap -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -49,9 +54,25 @@ if(isset($_GET['legajo'])){
 <script type="text/javascript">
 $(document).ready(function() {
   $('#example').DataTable( {
-      "scrollY": "500px",
-      "scrollCollapse": true
-  } );
+    "language": {
+          "lengthMenu": "Mostrar _MENU_ registros por pagina",
+          "zeroRecords": "No se encontraron registros",
+          "info": "Pagina _PAGE_ de _PAGES_",
+          "infoEmpty": "No hay registros",
+          "infoFiltered": "(filtrado de _MAX_ registros)",
+          "sSearch":       	"Buscar",
+          "oPaginate": {
+            "sFirst":    	"Primero",
+            "sPrevious": 	"Anterior",
+            "sNext":     	"Siguiente",
+            "sLast":     	"Ultimo"
+          }
+      },
+      "scrollY":        "500px",
+      "scrollCollapse": true,
+      "columnDefs": [{ type: 'date-uk', targets: 0 }],
+      "order":[[0,"desc"]]
+        } );
 
   $('#example tbody').on( 'click', 'tr', function () {
         if ( $(this).hasClass('selected') ) {
@@ -90,55 +111,6 @@ $(document).ready(function() {
 
 </script>
   </head>
-  <style type="text/css">
-  body{background: #000;}
-
-     .media
-    {
-        /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
-    }
-    .dp
-    {
-        border:10px solid #eee;
-        transition: all 0.2s ease-in-out;
-    }
-    .dp:hover
-    {
-        border:2px solid #eee;
-        transform:rotate(360deg);
-        -ms-transform:rotate(360deg);
-        -webkit-transform:rotate(360deg);
-        /*-webkit-font-smoothing:antialiased;*/
-    }
-body
-{
-    background-color: #1b1b1b;
-}
-
-.alert-purple { border-color: #694D9F;background: #694D9F;color: #fff; }
-.alert-info-alt { border-color: #B4E1E4;background: #81c7e1;color: #fff; }
-.alert-danger-alt { border-color: #B63E5A;background: #E26868;color: #fff; }
-.alert-warning-alt { border-color: #F3F3EB;background: #E9CEAC;color: #fff; }
-.alert-success-alt { border-color: #19B99A;background: #20A286;color: #fff; }
-.glyphicon { margin-right:10px; }
-.alert a {color: gold;}
-
-.input-group-addon
-{
-    background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142);
-    color: rgb(255, 255, 255);
-}
-.form-control:focus
-{
-    background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142);
-    color: rgb(255, 255, 255);
-}
-
-  </style>
   <body>
 
         <div class="container">
@@ -154,11 +126,12 @@ body
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
-                <div class="panel-body"
+                <div class="panel-body">
+                  <h4 class="text-center bg-info">Asignar tarjeta a empleado</h4>
                 <form class="form form-signup" role="form">
       						<div class="form-group">
       							<div class="input-group">
-      								<span class="input-group-addon"><h5 class="text-center"> Empleado:</h5><span class="glyphicon glyphicon-user"><?php echo $usuario; ?></span> </span>
+      								<span class="input-group-addon"><h5 class="text-center"><i class="fa fa-user fa-fw"></i> Empleado:</h5><?php echo $usuario; ?> </span>
                     </div>
       						</div>
     					</form>
@@ -194,7 +167,7 @@ echo "
 <div class='alert alert-danger-alt alert-dismissable'>
                 <span class='glyphicon glyphicon-certificate'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Error, no ha introducido todos los datos.</div>
+                    ×</button> Debe introducir un legajo! </div>
 ";
 }else{
 echo "";
@@ -217,7 +190,7 @@ echo "";
                       <th> Motivo </th>
                   </thead>
                     <tbody>
-                      <?php while($tarjetas = mssql_fetch_array( $stmt)){ ?>
+                      <?php while($tarjetas = sqlsrv_fetch_array( $stmt)){ ?>
                         <tr >
                             <td> <?php echo $tarjetas['idTarjeta']; ?> </td>
                             <td> <?php echo $tarjetas['fechaalta']; ?> </td>

@@ -2,8 +2,9 @@
 include('../inc/config.php');
 include('../inc/validar.php');
 
-$sql = "SELECT nombre_usuario,e.legajo,u.activo,fk_rol,  (nombre +' '+ apellido ) AS empleado FROM usuarios_web u JOIN empleados e ON u.idempleado = e.idempleado";
-$stmt = mssql_query($sql,$conn);
+$sql = "
+SELECT idEmpleado,legajo,nombre, apellido FROM empleados";
+$stmt = sqlsrv_query($conn,$sql);
 
 
 
@@ -15,6 +16,7 @@ $stmt = mssql_query($sql,$conn);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
     <title> Empleados </title>
 
     <!-- Bootstrap -->
@@ -36,6 +38,20 @@ $stmt = mssql_query($sql,$conn);
     <script type="text/javascript">
     $(document).ready(function() {
     $('#example').DataTable( {
+      "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por pagina",
+            "zeroRecords": "No se encontraron registros",
+            "info": "Pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros",
+            "infoFiltered": "(filtrado de _MAX_ registros)",
+            "sSearch":       	"Buscar",
+          	"oPaginate": {
+          		"sFirst":    	"Primero",
+          		"sPrevious": 	"Anterior",
+          		"sNext":     	"Siguiente",
+          		"sLast":     	"Ultimo"
+          	}
+        },
         "scrollY":        "500px",
         "scrollCollapse": true
           } );
@@ -56,7 +72,7 @@ $stmt = mssql_query($sql,$conn);
                //Recogemos la id del contenedor padre
                var usuario = $(this).attr('usuario');
                //Recogemos el valor del servicio
-              var dataString = 'usuario='+usuario;
+              var dataString = 'idEmpleado='+usuario;
               console.log(dataString);
 
 
@@ -77,29 +93,6 @@ $stmt = mssql_query($sql,$conn);
 
 
   </head>
-  <style type="text/css">
-  body{background: #000;}
-
-     .media
-    {
-        /*box-shadow:0px 0px 4px -2px #000;*/
-        margin: 20px 0;
-        padding:30px;
-    }
-    .dp
-    {
-        border:10px solid #eee;
-        transition: all 0.2s ease-in-out;
-    }
-    .dp:hover
-    {
-        border:2px solid #eee;
-        transform:rotate(360deg);
-        -ms-transform:rotate(360deg);
-        -webkit-transform:rotate(360deg);
-        /*-webkit-font-smoothing:antialiased;*/
-    }
-  </style>
   <body>
         <div class="container">
 
@@ -109,29 +102,24 @@ $stmt = mssql_query($sql,$conn);
       <?php include('../inc/menu.php'); ?>
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
+	  <h4 class="text-center bg-info">Padron de Empleados</h4>
         <div class="row">
               <table id="example" class="display" cellspacing="0" width="100%">
                 	<thead>
-                      <th> Usuario </th>
-            					<th> Empleado </th>
+                      <th> IdEmpleado </th>
+            					<th> Nombre </th>
+                      <th> Apellido </th>
             					<th> Legajo </th>
-                      <th> Activo </th>
-                      <th> Permisos </th>
                       <th> Eliminar </th>
                   </thead>
                     <tbody>
-                    	<?php while($usuarios = mssql_fetch_array( $stmt)){ ?>
+                    	<?php while($usuarios = sqlsrv_fetch_array( $stmt)){ ?>
                         <tr class="success">
-                            <td> <?php echo $usuarios['nombre_usuario']; ?> </td>
-                            <td> <?php echo $usuarios['empleado']; ?> </td>
+                            <td> <?php echo $usuarios['idEmpleado']; ?> </td>
+                            <td> <?php echo $usuarios['nombre']; ?> </td>
+                            <td> <?php echo $usuarios['apellido']; ?> </td>
                             <td> <?php echo $usuarios['legajo']; ?> </td>
-                            <?php if($usuarios['activo'] == 1){ ?>
-                            <td> SI </td>
-                            <?php }else{ ?>
-                            <td> NO </td>
-                            <?php } ?>
-                            <td> <?php if($usuarios['fk_rol'] == 0){ echo "Administrador"; }else{ echo "Normal"; } ?> </td>
-                            <td>  <a class="btn btn-primary btn-danger" role="button" usuario="<?php echo $usuarios['nombre_usuario']; ?>"> Eliminar </a> </td>
+                            <td>  <a class="btn btn-primary btn-danger" role="button" usuario="<?php echo $usuarios['idEmpleado']; ?>"> Eliminar </a> </td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -139,7 +127,9 @@ $stmt = mssql_query($sql,$conn);
 
 				</div>
       </div>
-
+	<div class="panel-footer">
+		<p class="text-center">Direccion de Sistemas - Municipalidad de Bariloche</p>
+	</div>
     </div> <!-- /container -->
 
   </body>

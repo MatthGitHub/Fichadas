@@ -17,9 +17,9 @@ if(isset($_POST['nombre_usuario']) && isset($_POST['contrasenia'])){
 			exit();
 		}else{
 		$sql = "SELECT nombre_usuario,clave,activo,idEmpleado,fk_rol FROM USUARIOS_WEB WHERE nombre_usuario = '$nombre_usuario'";
-		$stmt = mssql_query($sql,$conn);
+		$stmt = sqlsrv_query($conn,$sql);
 
-		$data = mssql_fetch_array($stmt);
+		$data = sqlsrv_fetch_array($stmt);
 
 		if($data['clave'] != $contrasenia) {
 			//echo "No a introducido una contrasenia correcta -"." Clave=".$contrasenia." - Original=".$data['clave'];
@@ -27,8 +27,8 @@ if(isset($_POST['nombre_usuario']) && isset($_POST['contrasenia'])){
 			exit();
 		}else{
 			$sql = "SELECT legajo,e.idempleado,nombre_usuario,clave,fk_rol FROM USUARIOS_WEB uw JOIN empleados e ON uw.idEmpleado = e.idEmpleado WHERE nombre_usuario = '$nombre_usuario'";
-			$stmt =mssql_query($sql,$conn);
-			$row = mssql_fetch_array($stmt);
+			$stmt =sqlsrv_query($conn,$sql);
+			$row = sqlsrv_fetch_array($stmt);
 			$nombre_usuario2 = $row['nombre_usuario'];
 			$_SESSION["s_nombre_usuario"] = $row['nombre_usuario'];
 
