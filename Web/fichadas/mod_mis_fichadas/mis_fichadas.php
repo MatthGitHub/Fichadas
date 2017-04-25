@@ -13,8 +13,9 @@ if(($_POST['txtFechaDesde'])&&($_POST['txtFechaHasta'])){
 $desde = $_POST['txtFechaDesde'];
 $hasta = $_POST['txtFechaHasta'];
 
-$sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
+$sql = "SELECT fecha,CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC, hora ASC";
 
+$dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
 
 $stmt = sqlsrv_query($conn,$sql);
 if( $stmt === false ) {
@@ -91,8 +92,7 @@ if( $stmt === false ) {
         },
         "scrollY":        "500px",
         "scrollCollapse": true,
-        "columnDefs": [{ type: 'date-uk', targets: 0 }],
-        "order":[[0,"desc"],[1,"desc"]]
+        "columnDefs": [{ type: 'date-uk', targets: 0 }]
           } );
       } );
     </script>
@@ -107,9 +107,17 @@ if( $stmt === false ) {
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 	  <h4 class="text-center bg-info">Mis Fichadas</h4>
+      <form action="mis_fichadas_print.php" method="post" target="_blank">
+        <input name="hd_desde" type="hidden" id="hd_desde" value="<?php echo $desde; ?>">
+        <input name="hd_hasta" type="hidden" id="hd_hasta" value="<?php echo $hasta; ?>">
+        <label>
+        <input class="btn btn-sm btn-primary btn-block" type="submit" name="button" id="button" value="Imprimir">
+        </label>
+      </form>
         <div class="row">
               <table id="example" class="display" cellspacing="0" width="100%">
                 	<thead>
+                      <th> Dia </th>
                       <th> Fecha </th>
             					<th> Hora </th>
             					<th> E/S </th>
@@ -119,6 +127,7 @@ if( $stmt === false ) {
                     <tbody>
                     	<?php while($fichadas = sqlsrv_fetch_array( $stmt)){ ?>
                         <tr class="success">
+                            <td> <?php echo $dias[date('N',strtotime(date('l', strtotime(date_format($fichadas['fecha'],'Y-m-d')))))]; ?> </td>
                             <td> <?php echo $fichadas['fechaN']; ?> </td>
                             <td> <?php echo $fichadas['hora']; ?> </td>
                             <td> <?php echo $fichadas['entradasalida']; ?> </td>

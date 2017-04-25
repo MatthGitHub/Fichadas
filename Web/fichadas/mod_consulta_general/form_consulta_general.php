@@ -10,20 +10,27 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
 
   $aLegajo = $_SESSION['legajo'];
 
+  $dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
+
   //Valido si el usuario que lo pide tiene asignado el legajo que pide al menos que sea de personal
-  if($_SESSION['permiso'] == 3){
+  if(($_SESSION['permiso'] == 0)||($_SESSION['permiso'] == 3)){
     //Busco al empleado
     $sql = "SELECT apellido, nombre FROM Empleados WHERE legajo = $legajo";
     $stmt = sqlsrv_query($conn,$sql);
     $stmt = sqlsrv_fetch_array($stmt);
     $nombre = $stmt['nombre'];
     $apellido = $stmt['apellido'];
+
     //Busco las fichadas del legajo seleccionado
-    $sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
+    $sql = "SELECT fecha,CONVERT(VARCHAR(12),fecha,3) as fechaN,
+    CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo,
+     ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj
+     FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC,hora ASC";
     $stmt = sqlsrv_query($conn,$sql);
 
 
   }else{
+    //Valido si el usuario que solicita las fichadas tiene el legajo asignado
     $sql = "SELECT * FROM Personal_fichadas_permisos WHERE usuario = $aLegajo AND legajo = $legajo";
     $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
     $params = array();
@@ -38,13 +45,14 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
       $apellido = $stmt['apellido'];
 
       //Busco las fichadas del legajo seleccionado
-      $sql = "SELECT CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC";
+      $sql = "SELECT fecha,CONVERT(VARCHAR(12),fecha,3) as fechaN,
+      CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC,hora ASC";
       $stmt = sqlsrv_query($conn,$sql);
     }else{
       header("Location: form_consulta_general.php?errordat");
       exit();
     }
-  }
+}
 }else{
   $nombre = '';
   $apellido = '';
@@ -120,8 +128,7 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
         },
         "scrollY":        "500px",
         "scrollCollapse": true,
-        "columnDefs": [{ type: 'date-uk', targets: 0 }],
-        "order":[[0,"desc"]]
+        "columnDefs": [{ type: 'date-uk', targets: 0 }]
           } );
       } );
     </script>
@@ -143,7 +150,7 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
 								<form class="form form-signup" role="form">
 									<div class="form-group">
 										<div class="input-group">
-											<span class="input-group-addon"><h5 class="text-center"><i class="fa fa-female fa-fw"></i> Empleado <i class="fa fa-male fa-fw"></i></h5><?php echo $nombre." ".$apellido; ?></span>		
+											<span class="input-group-addon"><h5 class="text-center"><i class="fa fa-female fa-fw"></i> Empleado <i class="fa fa-male fa-fw"></i></h5><?php echo $nombre." ".$apellido; ?></span>
 										</div>
 									</div>
 									<div class="form-group">
@@ -162,10 +169,10 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
 									  <div class='input-group date' id='divMiCalendario2'>
 										<input name="txtFechaHasta" type='text' id="txtFechaHasta" class="form-control" placeholder="Hasta" readonly/>
 										<span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
-										
+
 									  </div>
 									</div>
-									
+
 									<input type="submit" name="Submit" value="BUSCAR"  class="btn btn-sm btn-primary btn-block">
 									<?php
 									if(isset($_GET['sucess'])){
@@ -211,9 +218,18 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
 			</div>
 		</div>
 		<div class="jumbotron">
-			<div class="row">
+        <form action="consulta_general_print.php" method="post" target="_blank">
+          <input type="hidden" name="hd_legajo" id="hd_legajo" value="<?php echo $legajo; ?>">
+          <input name="hd_desde" type="hidden" id="hd_desde" value="<?php echo $desde; ?>">
+        <input name="hd_hasta" type="hidden" id="hd_hasta" value="<?php echo $hasta; ?>">
+        <label>
+        <input class="btn btn-sm btn-primary btn-block" type="submit" name="button" id="button" value="Imprimir">
+        </label>
+        </form>
+	  <div class="row">
 				<table id="example" class="display" cellspacing="0" width="100%">
-					<thead>
+          <thead>
+            <th> Dia </th>
 					  <th> Fecha </th>
 					  <th> Hora </th>
 					  <th> E/S </th>
@@ -223,6 +239,7 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
 					<tbody>
 					  <?php while($fichadas = sqlsrv_fetch_array( $stmt)){ ?>
 						<tr class="success">
+              <td> <?php echo $dias[date('N',strtotime(date('l', strtotime(date_format($fichadas['fecha'],'Y-m-d')))))]; ?> </td>
 							<td> <?php echo $fichadas['fechaN']; ?> </td>
 							<td> <?php echo $fichadas['hora']; ?> </td>
 							<td> <?php echo $fichadas['entradasalida']; ?> </td>
@@ -240,13 +257,13 @@ if(isset($_POST['legajo'])&&isset($_POST['txtFechaDesde'])&&isset($_POST['txtFec
 	</div> <!-- /container -->
     <script type="text/javascript">
     $('#divMiCalendario').datetimepicker({
-      format: 'YYYY-MM-DD'
+      format: 'YYYY-DD-MM'
     });
     //$('#divMiCalendario').data("DateTimePicker").show();
     </script>
     <script type="text/javascript">
     $('#divMiCalendario2').datetimepicker({
-      format: 'YYYY-MM-DD'
+      format: 'YYYY-DD-MM'
     });
     //$('#divMiCalendario2').data("DateTimePicker").show();
     </script>

@@ -36,6 +36,7 @@ if(isset($_POST['nombre_usuario']) && isset($_POST['contrasenia'])){
 			$_SESSION["permiso"] = $row['fk_rol'];
 			$_SESSION["idempelado"] = $row['idempleado'];
 			$_SESSION["legajo"] = $row['legajo'];
+			$_SESSION["origen"] = "fichadas";
 			if($data['activo'] != 1){
 				session_destroy();
 				header("Location: ../index.php?erroractiv");

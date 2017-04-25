@@ -11,7 +11,7 @@ include('validar.php');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/png" href="../images/icons/clock.png" sizes="16x16">
-    <title>Inicio</title>
+    <title>Sistema de Fichadas</title>
 
     <!-- Bootstrap -->
 		<script src="../js/jquery-1.12.3.js"></script>
@@ -33,33 +33,26 @@ include('validar.php');
       <div class="jumbotron">
         <h2><img src="../images/icons/clock_blanco.gif" alt="Municipalidad Bariloche" align="middle" style="margin:0px 0px 0px 0px" height="32" width="32"> Accesos Frecuentes de Fichadas </h2>
         <div class="row">
-          <div class="col-lg-5">
-            <p>
-  			       <a class="btn btn-lg btn-direct" href="../mod_mis_fichadas/form_mis_fichadas.php" role="button">Mis fichadas &raquo;</a>
-          </p>
-        </div>
-            <div class="col-lg-5"><?php if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)|| ($_SESSION['permiso'] == 3)){ ?>
-      				<p>
-      					<a class="btn btn-lg btn-direct" href="../mod_consulta_general/form_consulta_general.php" role="button"> Consulta general de fichadas &raquo;</a>
-      				</p>
-    				<?php } ?>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-5"><?php
+			<div class="col-lg-5">
+				<p>
+				   <a class="btn btn-lg btn-direct" href="../mod_mis_fichadas/form_mis_fichadas.php" role="button">Mis fichadas</a>
+					<?php if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)|| ($_SESSION['permiso'] == 3)){ ?>
+					<a class="btn btn-lg btn-direct" href="../mod_consulta_general/form_consulta_general.php" role="button"> Consulta general de fichadas</a>
+				</p>
+				<?php } ?>
+			</div>
+			<div class="col-md-5"><?php
              if(($_SESSION['permiso'] == 0) || ($_SESSION['permiso'] == 1)){ ?>
               <p>
-                <a class="btn btn-lg btn-direct" href="../mod_consulta_diaria/form_consulta_diaria.php" role="button"> Parte diario &raquo;</a>
-              </p>
-            <?php } ?>
-        </div>
-          <div class="col-md-5"><?php
-  				    if(($_SESSION['permiso'] == 0)|| ($_SESSION['permiso'] == 3)){  ?>
-      			<p>
-      				<a class="btn btn-lg btn-direct" href="../mod_control_acceso/form_seleccionar_legajo_control_acceso.php" role="button">Control acceso a fichadas &raquo;</a>
-      			</p>
-  			       <?php } ?>
-        </div>
+                <a class="btn btn-lg btn-direct" href="../mod_consulta_diaria/form_consulta_diaria.php" role="button"> Parte diario</a>
+              
+				<?php } ?>
+				<?php
+				if(($_SESSION['permiso'] == 0)|| ($_SESSION['permiso'] == 3)){  ?>
+					<a class="btn btn-lg btn-direct" href="../mod_control_acceso/form_seleccionar_legajo_control_acceso.php" role="button">Control acceso a fichadas</a>
+				</p>
+			   <?php } ?>
+			</div>
         </div>
 
 

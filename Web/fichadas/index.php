@@ -5,16 +5,16 @@ include('inc/config.php');
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
-	
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 	<link rel="icon" type="image/png" href="images/icons/clock.png" sizes="16x16">
-    <title>Acceso</title>
+    <title>Sistema Fichadas MSCB</title>
 
     <!-- Bootstrap core CSS -->
     <script src="js/jquery-1.12.3.js"></script>
@@ -40,11 +40,19 @@ body
   </head>
 
   <body>
+ 
+                   
+            
+  
 <div class="container">
+
     <div class="row">
+   
         <div class="col-md-4 col-md-offset-4">
+         <a href="instructivo.pdf" class="btn btn-sm btn-primary btn-block" target="_blank">ABRIR MANUAL<img src="images/icons/instructivo.png" alt="Municipalidad Bariloche" align="middle" style="margin:0px 0px 0px 15px" height="52" width="52"></a>
             <div class="panel panel-default">
                 <div class="panel-body">
+                
 				<img src="images/icons/clock.png" alt="Municipalidad Bariloche" align="middle" style="margin:0px 0px 0px 140px" height="52" width="52">
 				    <h4 class="text-center bg-info">Sistema de Fichadas</h4>
                     <form class="form form-signup" role="form" method="post" action="inc/entrar.php">
@@ -60,17 +68,13 @@ body
                             <input type="password" id="contrasenia" name="contrasenia" class="form-control" placeholder="Contrase&ntilde;a" />
                         </div>
                     </div>
-					<div class='alert alert-danger-alt alert-dismissable'>
-						<span class='glyphicon glyphicon-exclamation-sign'></span>
-						<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-						×</button>ATENCION: Su USUARIO es el mismo de PGM. En el primer ingreso, su clave es su numero de LEGAJO. Por favor cambiar la clave por su seguridad. Atte. Direccion de Sistemas
-					</div>
+					
                 </div>
                 <input type="submit" name="Submit" value="INICIAR SESION"  class="btn btn-sm btn-primary btn-block" >
 
                <br>
                </form>
-              </div>
+          </div>
 <?php
 if(isset($_GET['errorpass'])){
 echo "
@@ -132,7 +136,7 @@ echo "
 echo "";
 }
 ?>
-        </div>
+      </div>
     </div>
 	<div class="panel-footer">
 			<p class="text-center">Direccion de Sistemas - Municipalidad de Bariloche</p>

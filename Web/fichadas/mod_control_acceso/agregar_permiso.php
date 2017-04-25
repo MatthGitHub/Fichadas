@@ -25,7 +25,7 @@ if(isset($_POST['legajo'])){
       }else{
         $sql = "INSERT INTO Personal_fichadas_permisos VALUES ( $aLegajo,$legajo)";
         sqlsrv_query($conn,$sql);
-        header("Location: form_control_acceso.php?success&legajo={$aLegajo}");
+        header("Location: form_control_acceso.php?success&legajo={$aLegajo}&listo={$legajo}");
         exit();
       }
     }else{

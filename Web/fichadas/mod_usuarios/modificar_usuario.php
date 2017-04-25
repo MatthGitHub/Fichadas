@@ -74,7 +74,7 @@ $roles = sqlsrv_query($conn,$sql2);
 									</select>
 								</div>
 							</div>
-						<input type="submit" name="Submit" value="CREAR"  class="btn btn-sm btn-primary btn-block">
+						<input type="submit" name="Submit" value="MODIFICAR"  class="btn btn-sm btn-primary btn-block">
 						</div>
 					  </form>
 					</div>

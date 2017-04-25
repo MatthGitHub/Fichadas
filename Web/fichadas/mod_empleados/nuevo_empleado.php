@@ -583,10 +583,10 @@ $tipoEmpleado = sqlsrv_query($conn,$sql);
     </div> <!-- /container -->
     <script type="text/javascript">
     $('#divMiCalendario').datetimepicker({
-      format: 'YYYY-MM-DD'
+      format: 'YYYY-DD-MM'
     });
     $('#divMiCalendario2').datetimepicker({
-      format: 'YYYY-MM-DD'
+      format: 'YYYY-DD-MM'
     });
     //$('#divMiCalendario').data("DateTimePicker").show();
     </script>

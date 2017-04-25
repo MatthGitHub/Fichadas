@@ -33,16 +33,18 @@ if(($_POST['legajo'])&&($_POST['nombre'])&&($_POST['apellido'])&&($_POST['tipoDo
     $ingreso = $_POST['txtFechaIngreso'];
     $oficop = $_POST['oficop'];
 
-  echo "Legajo: ".$legajo." -- Nombre: ".$nombre." -- Apellido: ".$apellido." -- TipoDoc: ".$tipoDoc.
+  /*echo "Legajo: ".$legajo." -- Nombre: ".$nombre." -- Apellido: ".$apellido." -- TipoDoc: ".$tipoDoc.
     " -- DNI: ".$documento." -- CUIL: ".$cuil." -- Domicilio: ".$domicilio." -- Sexo: ".$sexo." -- Func: ".$funcion.
     " -- Lugar: ".$lugar." -- Nac: ".$nacionalidad." -- Edif: ".$edificio." -- TipoEmp: ".$tipEmpleado." -- Correo: ".$correo.
     " -- FechaN: ".$fecha." -- Tel: ".$telefono." -- Cat.: ".$categoria." -- Sereno: ".$sereno." -- Activo: ".$activo.
     " -- Horas: ".$horas." -- Toler: ".$tolerancia." -- FechaI: ".$ingreso." -- Oficina: ".$oficop;
-    //exit();
+    exit();*/
 
     //Busco si existe el nombre de usuario
-    $slq = "SELECT * FROM empleados WHERE NumDocumento = '$documento'";
-    $stmt = sqlsrv_query($conn,$sql);
+    $sql = "SELECT * FROM empleados WHERE NumDocumento = '$documento'";
+    $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+    $params = array();
+    $stmt = sqlsrv_query($conn,$sql,$params,$options);
     //Compruebo si existe el nombre de usuario
     if(sqlsrv_num_rows($stmt)>0){
       header("Location:nuevo_usuario.php?errordat");
@@ -56,11 +58,24 @@ if(($_POST['legajo'])&&($_POST['nombre'])&&($_POST['apellido'])&&($_POST['tipoDo
       $idempleado = $idempleado + 1;
 
 
-
+      echo $idempleado;
+      exit();
 
       $sql = "INSERT INTO empleados
-      (idEmpleado,Legajo,Nombre,Apellido,NumDocumento,Cuil,FechaNacimiento,Domicilio,Sexo,Categoria,Telefono,PersonalACargo,IdFoto,FechaIngreso,Activo,AdicionalPorFuncion,AntiguedadAnterior,Email,Esereno,ToleranciaTarde,HorasATrabajar,IdFuncion,idTipoEmpleado,idLugarTrabajo,idTipoDoc,IdNacionalidad,IdTipoFranco,IdEdificio,OficinaPersonal)
-      VALUES ($idempleado,$legajo,'$nombre','$apellido','$documento','$cuil','$txtFecha','$domicilio','$sexo',$categoria,'$telefono',null,null,'$txtFechaIngreso',$activo,null,null,'$correo',$sereno,$tolerancia,$horas,$funcion,$tipEmpleado,$lugar,$tipoDoc,$nacionalidad,NULL,$edificio,$oficop)";
+      (idEmpleado,Legajo,Nombre,Apellido,NumDocumento,Cuil,
+        FechaNacimiento,Domicilio,Sexo,Categoria,
+        Telefono,PersonalACargo,IdFoto,FechaIngreso,
+        Activo,AdicionalPorFuncion,AntiguedadAnterior,
+        Email,Esereno,ToleranciaTarde,HorasATrabajar,
+        IdFuncion,idTipoEmpleado,idLugarTrabajo,idTipoDoc,
+        IdNacionalidad,IdTipoFranco,IdEdificio,OficinaPersonal)
+      VALUES ($idempleado,$legajo,'$nombre','$apellido','$documento','$cuil',
+        '$fecha','$domicilio','$sexo',$categoria,
+        '$telefono', null,null,'$ingreso',
+        $activo,null,null,
+        '$correo',$sereno,$tolerancia,$horas,
+        $funcion,$tipEmpleado,$lugar,$tipoDoc,
+        $nacionalidad,NULL,$edificio,$oficop)";
 
       $error = sqlsrv_query($conn,$sql);
 
@@ -68,7 +83,8 @@ if(($_POST['legajo'])&&($_POST['nombre'])&&($_POST['apellido'])&&($_POST['tipoDo
         header("Location: nuevo_empleado.php?success");
         exit();
       }else{
-        header("Location: nuevo_empleado.php?errordb");
+        //header("Location: nuevo_empleado.php?errordb");
+        echo $error;
         exit();
       }
 

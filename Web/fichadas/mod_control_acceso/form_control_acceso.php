@@ -10,6 +10,7 @@ if($_POST['legajo']){
 }else{
   if($_GET['legajo']){
     $legajo = $_GET['legajo'];
+    $listo = $_GET['listo'];
   }else{
   header("Location: form_seleccionar_legajo_control_acceso.php?errordb");
   exit();
@@ -110,7 +111,7 @@ $(document).ready(function() {
 
 </script>
   </head>
-  <body>
+<body onLoad="document.form1.legajo.focus();">
 
         <div class="container">
           <br>
@@ -144,7 +145,7 @@ echo "
 <div class='alert alert-success-alt alert-dismissable'>
                 <span class='glyphicon glyphicon-ok'></span>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                    ×</button>Listo! Legajo agregado satisfactoriamente.</div>
+                    ×</button>Listo! Legajo $listo agregado satisfactoriamente.</div>
 ";
 }else{
 echo "";

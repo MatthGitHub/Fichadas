@@ -11,7 +11,7 @@ $fecha = $_POST['txtFecha'];
 $ubicacion = $_POST['ubicacion'];
 
 
-//Numeo del dia de la semana
+//Numero del dia de la semana
 $diaSemana = date('l', strtotime($fecha));
 $diaSemana = date('N', strtotime($diaSemana));
 

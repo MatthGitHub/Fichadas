@@ -116,6 +116,7 @@ textarea {
   margin: 0;
   font: inherit;
   color: inherit;
+  resize: none;
 }
 select:hover {
     background-color:#76c177;
@@ -1598,6 +1599,7 @@ pre code {
   margin-right: auto;
   margin-left: auto;
 }
+
 @media (min-width: 768px) {
   .container {
     width: 750px;
@@ -2128,6 +2130,8 @@ pre code {
   }
   .col-lg-5 {
     width: 41.66666667%;
+	padding-left: 60px;
+	margin-left: 50px;
   }
   .col-lg-4 {
     width: 33.33333333%;
@@ -3518,7 +3522,8 @@ fieldset[disabled] .btn-link:focus {
   padding: 10px 16px;
   font-size: 18px;
   line-height: 1.3333333;
-  border-radius: 6px;
+  border-radius: 0px;
+  width: 100%;
 }
 .btn-sm,
 .btn-group-sm > .btn {
@@ -3550,6 +3555,34 @@ input[type="submit"].btn-block,
 input[type="reset"].btn-block,
 input[type="button"].btn-block {
   width: 100%;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1;
+	text-align: center;
+	border-radius: 4px;
+	background-color: #006c76;
+	border-color: #006c76;
+	color: #fff;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }
 .fade {
   opacity: 0;
@@ -3590,12 +3623,13 @@ tbody.collapse.in {
   display: inline-block;
   width: 0;
   height: 0;
-  margin-left: 2px;
+  margin-left: 1px;
+  margin-right: 0px;
   vertical-align: middle;
   border-top: 4px dashed;
   border-top: 4px solid \9;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
+  border-right: 2px solid transparent;
+  border-left: 2px solid transparent;
 }
 .dropup,
 .dropdown {
@@ -4264,10 +4298,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 @media (min-width: 768px) {
   .navbar-header {
     float: left;
+	background-image: url("../images/icons/clock_blanco_small.png");
+	background-repeat: no-repeat;
+	background-position: left center; 
+	margin: 0px 0px 15px 0px
   }
 }
 .navbar-collapse {
-  padding-right: 15px;
+  padding-right: 0px;
   padding-left: 15px;
   overflow-x: visible;
   -webkit-overflow-scrolling: touch;
@@ -4580,7 +4618,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default {
-  background-color: #006c76;
+ background-color: #006c76;
   border-color: #006c76;
 }
 .navbar-default .navbar-brand {
