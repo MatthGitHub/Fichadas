@@ -1,6 +1,6 @@
 <?php
 $serverName = "10.20.130.242"; //serverName\instanceName
-$connectionInfo = array( "Database"=>"KRONOSPERSONAL", "UID"=>"sa", "PWD"=>"tacuari");
+$connectionInfo = array( "Database"=>"KRONOSPERSONAL", "UID"=>"sa", "PWD"=>"tacuari","CharacterSet" => "UTF-8");
 $conn = sqlsrv_connect( $serverName, $connectionInfo);
 
 if( $conn ) {

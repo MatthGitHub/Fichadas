@@ -32,6 +32,7 @@
 				  <li><a href="../mod_usuarios/usuarios.php">Listar</a></li>
 				  <li><a href="../mod_usuarios/nuevo_usuario.php">Nuevo</a></li>
 				  <li><a href="../mod_usuarios/modificar_usuario.php">Modificar</a></li>
+          <li><a href="../mod_usuarios/frm_reiniciar_clave.php">Reiniciar clave</a></li>
 				</ul>
 		  </li>
 		  <?php } ?>

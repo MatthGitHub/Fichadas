@@ -10,7 +10,7 @@ if(isset($_POST['hd_legajo'])&&isset($_POST['hd_desde'])&&isset($_POST['hd_hasta
 
   $aLegajo = $_SESSION['legajo'];
 
-  $dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
+  $dias = array("lunes","martes","miercoles","jueves","viernes","sabado","domingo");
 
   //Valido si el usuario que lo pide tiene asignado el legajo que pide al menos que sea de personal
   if(($_SESSION['permiso'] == 0)||($_SESSION['permiso'] == 3)){
@@ -139,7 +139,7 @@ window.print();
 					<tbody>
 					  <?php while($fichadas = sqlsrv_fetch_array( $stmt)){ ?>
 						<tr class="success">
-              <td> <?php echo $dias[date('N',strtotime(date('l', strtotime(date_format($fichadas['fecha'],'Y-m-d')))))]; ?> </td>
+              <td> <?php echo $dias[date('N',strtotime(date('l', strtotime(date_format($fichadas['fecha'],'Y-m-d')))))-1]; ?> </td>
 							<td> <?php echo $fichadas['fechaN']; ?> </td>
 							<td> <?php echo $fichadas['hora']; ?> </td>
 							<td> <?php echo $fichadas['entradasalida']; ?> </td>

@@ -123,7 +123,8 @@ $stmt = sqlsrv_query($conn,$sql);
                             <td> <?php echo $usuarios['activo']; ?> </td>
                             <td> <?php if($usuarios['fk_rol'] == 0){ echo "Administrador"; };
                                        if($usuarios['fk_rol'] == 1){ echo "Jefe"; };
-                                       if($usuarios['fk_rol'] == 2){ echo "Normal"; }; ?> </td>
+                                       if($usuarios['fk_rol'] == 2){ echo "Normal"; };
+                                       if($usuarios['fk_rol'] == 3){ echo "Personal"; }; ?> </td>
                             <td>  <a class="btn btn-primary btn-danger" role="button" usuario="<?php echo $usuarios['nombre_usuario']; ?>"> Eliminar </a> </td>
                         </tr>
                         <?php } ?>

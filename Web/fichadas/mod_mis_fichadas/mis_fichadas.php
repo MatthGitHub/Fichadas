@@ -15,7 +15,7 @@ $hasta = $_POST['txtFechaHasta'];
 
 $sql = "SELECT fecha,CONVERT(VARCHAR(12),fecha,3) as fechaN,CONVERT(VARCHAR(8),hora,108) AS hora,entradasalida,tipo, ubicacionreloj+'('+CAST(numeroreloj as VARCHAR(2))+')' AS reloj FROM fichada f JOIN empleados e 	ON e.idempleado = f.idempleado JOIN ubicacionreloj u ON u.idReloj = f.idreloj WHERE legajo = $legajo AND fecha >= '$desde' AND fecha <= '$hasta' ORDER BY fecha DESC, hora ASC";
 
-$dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
+$dias = array("lunes","martes","miercoles","jueves","viernes","sabado","domingo");
 
 $stmt = sqlsrv_query($conn,$sql);
 if( $stmt === false ) {
@@ -127,7 +127,7 @@ if( $stmt === false ) {
                     <tbody>
                     	<?php while($fichadas = sqlsrv_fetch_array( $stmt)){ ?>
                         <tr class="success">
-                            <td> <?php echo $dias[date('N',strtotime(date('l', strtotime(date_format($fichadas['fecha'],'Y-m-d')))))]; ?> </td>
+                            <td> <?php echo $dias[date('N',strtotime(date('l', strtotime(date_format($fichadas['fecha'],'Y-m-d')))))-1]; ?> </td>
                             <td> <?php echo $fichadas['fechaN']; ?> </td>
                             <td> <?php echo $fichadas['hora']; ?> </td>
                             <td> <?php echo $fichadas['entradasalida']; ?> </td>

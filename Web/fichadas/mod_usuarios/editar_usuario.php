@@ -13,14 +13,14 @@ if(isset($_POST['empleado'])&&isset($_POST['rol'])){
       header("Location: modificar_usuario?success");
       exit();
     }else{
-      header("Location: nuevo_usuario?errordb");
+      header("Location: modificar_usuario?errordb");
       exit();
     }
 
 
 
 }else{
-    header("Location:nuevo_usuario.php?errordat");
+    header("Location:modificar_usuario.php?errordat");
     exit();
 }
 
